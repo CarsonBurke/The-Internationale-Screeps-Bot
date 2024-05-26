@@ -8,7 +8,6 @@ import { StatsManager } from 'international/stats'
 import { ConstructionManager } from 'room/construction/construction'
 import { RemotesManager } from 'room/commune/remotesManager'
 import { HaulRequestManager } from 'room/commune/haulRequestManager'
-import { WorkRequestManager } from 'room/commune/workRequest'
 import { Quad } from 'room/creeps/roleManagers/antifa/quad'
 import { DynamicSquad } from 'room/creeps/roleManagers/antifa/dynamicSquad'
 import { Duo } from 'room/creeps/roleManagers/antifa/duo'
@@ -116,6 +115,7 @@ import { RoomServices } from 'room/roomServices'
 import { HaulerNeedOps } from 'room/commune/haulerNeedOps'
 import { MyCreepServices } from 'room/creeps/myCreepServices'
 import { MyPowerCreepServices } from 'room/creeps/myPowerCreepServices'
+import { WorkRequestOps } from 'room/commune/workRequest'
 
 export function profilerRegister() {
   // Classes
@@ -162,7 +162,6 @@ export function profilerRegister() {
   profiler.registerClass(ConstructionManager, 'ConstructionManager')
   profiler.registerClass(RemotesManager, 'RemotesManager')
   profiler.registerClass(HaulRequestManager, 'HaulRequestManager')
-  profiler.registerClass(WorkRequestManager, 'WorkRequestManager')
   profiler.registerClass(EndTickCreepManager, 'EndTickCreepManager')
   profiler.registerClass(LinkManager, 'LinkManager')
   profiler.registerClass(DefenceProcs, 'DefenceProcs')
@@ -193,6 +192,7 @@ export function profilerRegister() {
   profiler.registerClass(ObserverProcs, 'ObserverProcs')
   profiler.registerClass(PowerSpawnProcs, 'PowerSpawnProcs')
   profiler.registerClass(HaulerNeedOps, 'HaulerNeedOps')
+  profiler.registerClass(WorkRequestOps, "WorkRequestOps")
 
   // Creep classes
 

@@ -14,33 +14,25 @@ import { CommuneOps } from './communeOps'
 
 const checkRoomStatusInverval = randomIntRange(200, 500)
 
-export class WorkRequestManager {
-  communeManager: CommuneManager
+export class WorkRequestOps {
+    static tryCreateWorkRequest(room: Room) {
 
-  constructor(communeManager: CommuneManager) {
-    this.communeManager = communeManager
-  }
+        // create a workRequest if needed
 
-  preTickRun() {
-    const { room } = this.communeManager
+        if (room.roomManager.structures.spawn.length) return
 
-    // create a workRequest if needed
+        let request = Memory.workRequests[room.name]
+        if (request) {
+          request[WorkRequestKeys.priority] = 0
+          return
+        }
 
-    if (room.roomManager.structures.spawn.length) return
-
-    let request = Memory.workRequests[room.name]
-    if (request) {
-      request[WorkRequestKeys.priority] = 0
-      return
+        request = Memory.workRequests[room.name] = {
+          [WorkRequestKeys.priority]: 0,
+        }
     }
 
-    request = Memory.workRequests[room.name] = {
-      [WorkRequestKeys.priority]: 0,
-    }
-  }
-
-  run() {
-    const { room } = this.communeManager
+    static manageWorkRequest(room: Room) {
     const roomMemory = Memory.rooms[room.name]
 
     const requestName = roomMemory[RoomMemoryKeys.workRequest]
@@ -55,7 +47,7 @@ export class WorkRequestManager {
 
     // if we have no spawn, stop
     if (!room.roomManager.structures.spawn.length) {
-      this.stopResponse(true)
+      CommuneOps.stopWorkRequestResponse(room, true)
       return
     }
 
@@ -68,7 +60,7 @@ export class WorkRequestManager {
     ) {
       // Delete the request so long as the new type isn't ally
 
-      this.stopResponse(type !== RoomTypes.ally)
+      CommuneOps.stopWorkRequestResponse(room, type !== RoomTypes.ally)
       return
     }
 
@@ -78,25 +70,25 @@ export class WorkRequestManager {
       Memory.rooms[room.name][RoomMemoryKeys.status] !==
         Memory.rooms[requestName][RoomMemoryKeys.status]
     ) {
-      this.delete(requestName, request)
+      CommuneOps.abandonWorkRequest(room)
       return
     }
 
     // If the request has been abandoned, have the commune abandon it too
 
     if (request[WorkRequestKeys.abandon] > 0) {
-      this.stopResponse()
+      CommuneOps.stopWorkRequestResponse(room)
       return
     }
 
     if (room.energyCapacityAvailable < 650) {
-      this.stopResponse()
+      CommuneOps.stopWorkRequestResponse(room)
       return
     }
 
     const requestRoom = Game.rooms[requestName]
     if (!requestRoom && Game.gcl.level === CollectiveManager.communes.size) {
-      this.stopResponse(true)
+      CommuneOps.stopWorkRequestResponse(room, true)
       return
     }
 
@@ -111,7 +103,7 @@ export class WorkRequestManager {
       requestRoom.roomManager.structures.spawn.length &&
       requestRoom.roomManager.structures.spawn.find(spawn => spawn.my)
     ) {
-      this.delete(requestName, request)
+      CommuneOps.abandonWorkRequest(room)
       return
     }
 
@@ -121,7 +113,8 @@ export class WorkRequestManager {
     if (invaderCores.length) {
       // Abandon for the core's remaining existance plus the estimated reservation time
 
-      this.abandon(
+      CommuneOps.abandonWorkRequest(
+        room,
         invaderCores[0].effects[EFFECT_COLLAPSE_TIMER].ticksRemaining + CONTROLLER_RESERVE_MAX,
       )
       return
@@ -158,53 +151,5 @@ export class WorkRequestManager {
 
             if (request[WorkRequestKeys.minDamage] > 0 || request[WorkRequestKeys.minHeal] > 0) this.abandonRemote()
         } */
-  }
-
-  private stopResponse(deleteCombat?: boolean) {
-    const roomMemory = this.communeManager.room.memory
-    const request = Memory.workRequests[roomMemory[RoomMemoryKeys.workRequest]]
-
-    if (deleteCombat) this.deleteCombat()
-
-    delete request[WorkRequestKeys.responder]
-    delete roomMemory[RoomMemoryKeys.workRequest]
-  }
-
-  private delete(requestName: string, request: WorkRequest) {
-    const roomMemory = this.communeManager.room.memory
-
-    this.deleteCombat()
-
-    delete Memory.workRequests[roomMemory[RoomMemoryKeys.workRequest]]
-    delete roomMemory[RoomMemoryKeys.workRequest]
-  }
-
-  private abandon(abandonTime: number = 20000) {
-    const roomMemory = this.communeManager.room.memory
-    const request = Memory.workRequests[roomMemory[RoomMemoryKeys.workRequest]]
-
-    this.deleteCombat()
-
-    request[WorkRequestKeys.abandon] = abandonTime
-    delete request[WorkRequestKeys.responder]
-    delete roomMemory[RoomMemoryKeys.workRequest]
-  }
-
-  private deleteCombat() {
-    const workRequestName = this.communeManager.room.memory[RoomMemoryKeys.workRequest]
-    const combatRequest = Memory.combatRequests[workRequestName]
-    if (!combatRequest) return
-
-    if (combatRequest[CombatRequestKeys.responder]) {
-      const combatRequestResponder = Game.rooms[combatRequest[CombatRequestKeys.responder]]
-      CommuneOps.deleteCombatRequest(
-        combatRequestResponder,
-        combatRequest[CombatRequestKeys.responder],
-        combatRequestResponder.memory[RoomMemoryKeys.combatRequests].indexOf(workRequestName),
-      )
-      return
     }
-
-    delete Memory.combatRequests[workRequestName]
-  }
 }

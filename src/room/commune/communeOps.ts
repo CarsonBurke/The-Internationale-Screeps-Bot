@@ -2,10 +2,12 @@ import { RoomUtils } from 'room/roomUtils'
 import { CommuneDataOps, communeData } from './communeData'
 import { CommuneUtils } from './communeUtils'
 import {
+    CombatRequestKeys,
   Result,
   RoomLogisticsRequestTypes,
   RoomMemoryKeys,
   RoomTypes,
+  WorkRequestKeys,
   creepRoles,
   haulerUpdateDefault,
 } from '../../constants/general'
@@ -24,6 +26,7 @@ import { TowerProcs } from './towerProcs'
 import { HaulerNeedOps } from './haulerNeedOps'
 import { CommuneManager } from './commune'
 import { RoomOps } from 'room/roomOps'
+import { WorkRequestOps } from './workRequest'
 
 /**
  * Minor processes for communes
@@ -158,7 +161,7 @@ export class CommuneOps {
     TerminalProcs.preTickRun(room)
     communeManager.remotesManager.initRun()
     communeManager.haulRequestManager.preTickRun()
-    communeManager.workRequestManager.preTickRun()
+    WorkRequestOps.tryCreateWorkRequest(room)
   }
 
   private static preTickTest(room: Room) {
@@ -184,7 +187,7 @@ export class CommuneOps {
 
     TerminalProcs.run(room)
 
-    communeManager.workRequestManager.run()
+    WorkRequestOps.manageWorkRequest(room)
     communeManager.combatRequestManager.run()
     communeManager.haulRequestManager.run()
 
@@ -350,5 +353,44 @@ export class CommuneOps {
 
     remoteMemory[RoomMemoryKeys.type] = RoomTypes.neutral
     RoomNameUtils.cleanMemory(remoteName)
+  }
+
+  static stopWorkRequestResponse(room: Room, deleteCombat?: boolean) {
+    const roomMemory = Memory.rooms[room.name]
+    const request = Memory.workRequests[roomMemory[RoomMemoryKeys.workRequest]]
+
+    if (deleteCombat) {
+        CommuneOps.deleteCombatForWorkRequest(room)
+    }
+
+    delete request[WorkRequestKeys.responder]
+    delete roomMemory[RoomMemoryKeys.workRequest]
+  }
+
+  static abandonWorkRequest(room: Room, abandonTime: number = 20000) {
+    const roomMemory = Memory.rooms[room.name]
+
+    CommuneOps.deleteCombatForWorkRequest(room)
+
+    delete Memory.workRequests[roomMemory[RoomMemoryKeys.workRequest]]
+    delete roomMemory[RoomMemoryKeys.workRequest]
+  }
+
+  static deleteCombatForWorkRequest(room: Room) {
+    const workRequestName = Memory.rooms[room.name][RoomMemoryKeys.workRequest]
+    const combatRequest = Memory.combatRequests[workRequestName]
+    if (!combatRequest) return
+
+    if (combatRequest[CombatRequestKeys.responder]) {
+      const combatRequestResponder = Game.rooms[combatRequest[CombatRequestKeys.responder]]
+      CommuneOps.deleteCombatRequest(
+        combatRequestResponder,
+        combatRequest[CombatRequestKeys.responder],
+        combatRequestResponder.memory[RoomMemoryKeys.combatRequests].indexOf(workRequestName),
+      )
+      return
+    }
+
+    delete Memory.combatRequests[workRequestName]
   }
 }
