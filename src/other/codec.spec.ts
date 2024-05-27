@@ -11,7 +11,7 @@ jest.mock('./ErrorExporter', () => {})
 // import * as constants from '../international/constants'
 // jest.spyOn<any, any>(constants, 'packedQuadAttackMemberOffsets').mockReturnValue([])
 
-import { buildableStructureTypes } from 'constants/general'
+import { buildableStructureTypes } from '../constants/general'
 
 import * as Codec from './codec'
 
