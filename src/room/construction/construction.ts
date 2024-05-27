@@ -16,6 +16,7 @@ import { RampartPlans } from './rampartPlans'
 import { CollectiveManager } from 'international/collective'
 import { Sleepable } from 'utils/sleepable'
 import { CommuneUtils } from 'room/commune/communeUtils'
+import { CreepMoveProcs } from 'room/creeps/creepMoveProcs'
 
 const generalMigrationStructures: BuildableStructureConstant[] = [
   STRUCTURE_EXTENSION,
@@ -73,7 +74,7 @@ export class ConstructionManager {
       if (!creepName) continue
 
       const creep = Game.creeps[creepName]
-      creep.shove()
+      CreepMoveProcs.shove(creep)
     }
   }
   private shouldPlace() {

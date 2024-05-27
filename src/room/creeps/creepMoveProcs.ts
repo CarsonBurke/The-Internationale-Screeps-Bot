@@ -3,15 +3,18 @@ import {
   CreepMemoryKeys,
   FlagNames,
   MovedTypes,
+  ReservedCoordTypes,
   Result,
   customColors,
   defaultCreepSwampCost,
   defaultPlainCost,
+  impassibleStructureTypesSet,
   packedPosLength,
 } from '../../constants/general'
 import { CustomPathFinderArgs, PathGoal, CustomPathFinder } from 'international/customPathFinder'
 import { packCoord, packPos, packPosList, unpackPos, unpackPosAt } from 'other/codec'
-import { areCoordsEqual, arePositionsEqual, findObjectWithID, getRange } from 'utils/utils'
+import { areCoordsEqual, arePositionsEqual, findObjectWithID, forAdjacentCoords, getRange, getRangeEuc, isAlly, isExit } from 'utils/utils'
+import { MyCreepProcs } from './myCreepProcs'
 
 /**
  * Utilities involving the movement of creeps
@@ -241,5 +244,147 @@ export class CreepMoveProcs {
 
     spawn.spawning.setDirections(directions)
     return
+  }
+
+  static tryRunMoveRequest(creep: Creep | PowerCreep) {
+    if (creep instanceof Creep && creep.spawning) return
+    if (!creep.moveRequest) return
+
+    CreepMoveProcs.shove(creep)
+  }
+
+  static shove(creep: Creep | PowerCreep, avoidPackedCoords: Set<string> = new Set()) {
+    const { room } = creep
+
+    let targetCoord = creep.actionCoord
+    if (!targetCoord && creep.memory[CreepMemoryKeys.goalPos])
+      targetCoord = unpackPos(creep.memory[CreepMemoryKeys.goalPos])
+
+    avoidPackedCoords.add(packCoord(creep.pos))
+
+    const shoveCoord = CreepMoveProcs.findShoveCoord(creep, avoidPackedCoords, targetCoord)
+    if (!shoveCoord) return false
+
+    const packedShoveCoord = packCoord(shoveCoord)
+    const creepAtPosName =
+      room.creepPositions[packedShoveCoord] || room.powerCreepPositions[packedShoveCoord]
+
+    // If there is a creep make sure we aren't overlapping with other shoves
+
+    if (creepAtPosName) {
+      avoidPackedCoords.add(packCoord(creep.pos))
+      avoidPackedCoords.add(packedShoveCoord)
+
+      const creepAtPos = Game.creeps[creepAtPosName] || Game.powerCreeps[creepAtPosName]
+      if (!CreepMoveProcs.shove(creep, avoidPackedCoords)) return false
+    }
+
+    creep.moveTarget = shoveCoord
+    return true
+  }
+
+  static findShoveCoord(
+    creep: Creep | PowerCreep,
+    avoidPackedCoords?: Set<string>,
+    targetCoord?: Coord,
+  ) {
+    const { room } = creep
+    const terrain = room.getTerrain()
+
+    let shoveCoord: Coord
+    let lowestScore = Infinity
+
+    forAdjacentCoords(creep.pos, coord => {
+      const packedCoord = packCoord(coord)
+
+      const creepAtPosName = room.creepPositions[packedCoord]
+      if (creepAtPosName) {
+        const creepAtPos = Game.creeps[creepAtPosName]
+        if (creepAtPos.fatigue > 0) return
+        //   if (creepAtPos.moved) return
+        // maybe want to reconsider this parameter
+        //   if (creepAtPos.moveRequest) return
+        if (creepAtPos.getActiveBodyparts(MOVE) === 0) return
+      }
+
+      if (avoidPackedCoords.has(packedCoord)) return
+
+      if (packedCoord !== creep.moveRequest && isExit(coord)) return
+
+      const terrainType = terrain.get(coord.x, coord.y)
+      if (terrainType === TERRAIN_MASK_WALL) return
+
+      // Use scoring to determine the cost of using the coord compared to potential others
+
+      let score = 0
+      if (targetCoord) {
+        score += getRangeEuc(coord, targetCoord) * 3
+      }
+
+      if (terrainType === TERRAIN_MASK_SWAMP) score += 1
+      if (room.creepPositions[packedCoord] || room.powerCreepPositions[packedCoord]) score += 1
+
+      // If the coord is reserved, increase score porportional to importance of the reservation
+      const reservationType = creep.room.roomManager.reservedCoords.get(packedCoord)
+      // Don't shove onto spawning-reserved coords
+      if (reservationType === ReservedCoordTypes.spawning) return
+      // Score based on value of reservation
+      if (reservationType !== undefined) score += reservationType * 2
+
+      if (Game.flags[FlagNames.roomVisuals])
+        creep.room.visual.text(score.toString(), coord.x, coord.y)
+
+      // Preference for lower-scoring coords
+      if (score >= lowestScore) return
+
+      // If the coord isn't safe to stand on
+
+      if (room.roomManager.enemyThreatCoords.has(packedCoord)) return
+
+      if (room.coordHasStructureTypes(coord, impassibleStructureTypesSet)) return
+
+      if (
+        creep.memory[CreepMemoryKeys.rampartOnlyShoving] &&
+        !room.findStructureAtCoord(
+          coord,
+          structure => structure.structureType === STRUCTURE_RAMPART,
+        )
+      ) {
+        return
+      }
+
+      let hasImpassibleStructure
+
+      for (const cSite of room.lookForAt(LOOK_CONSTRUCTION_SITES, coord.x, coord.y)) {
+        // If the construction site is owned by an ally, don't allow its position
+        if (!cSite.my && isAlly(cSite.owner.username)) {
+          hasImpassibleStructure = true
+          break
+        }
+
+        if (impassibleStructureTypesSet.has(cSite.structureType)) {
+          hasImpassibleStructure = true
+          break
+        }
+      }
+
+      if (hasImpassibleStructure) return
+
+      lowestScore = score
+      shoveCoord = coord
+    })
+
+    return shoveCoord
+  }
+
+  static tryRunMoveTarget(creep: Creep | PowerCreep) {
+    if (creep instanceof Creep && creep.spawning) return
+
+    const moveTarget = creep.moveTarget
+    if (!moveTarget) return
+
+    creep.move(
+      creep.pos.getDirectionTo(new RoomPosition(moveTarget.x, moveTarget.y, creep.room.name)),
+    )
   }
 }

@@ -774,20 +774,6 @@ declare global {
 
     assignMoveRequest(coord: Coord): void
 
-    findShoveCoord(avoidPackedCoords: Set<string>, targetCoord?: Coord): Coord
-
-    shove(avoidPackedCoords?: Set<string>): boolean
-
-    /**
-     * Try to enforce a moveRequest and inform the result
-     */
-    runMoveRequest(): boolean
-
-    /**
-     *unpackCoordAsPos
-     */
-    recurseMoveRequest(queue?: string[]): void
-
     avoidEnemyThreatCoords(): boolean
 
     /**
@@ -824,6 +810,8 @@ declare global {
      * The packed position of the moveRequest, if one has been made
      */
     moveRequest: string
+
+    moveTarget?: Coord
 
     /**
      * Wether the creep moved a resource this tick

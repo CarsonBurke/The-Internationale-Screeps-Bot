@@ -22,6 +22,7 @@ import { getRange, findAdjacentCoordsToCoord, Utils } from 'utils/utils'
 import { SpawnRequestConstructor, SpawnRequestConstructors } from './spawnRequestConstructors'
 import { CommuneUtils } from '../communeUtils'
 import { DebugUtils } from 'debug/debugUtils'
+import { CreepMoveProcs } from 'room/creeps/creepMoveProcs'
 
 export class SpawningStructureOps {
   public static tryRunSpawning(room: Room) {
@@ -407,7 +408,7 @@ export class SpawningStructureOps {
         })
       }
 
-      if (creepAtPos.shove(new Set([packedCoord]))) {
+      if (CreepMoveProcs.shove(creepAtPos, new Set([packedCoord]))) {
         creep.room.errorVisual(unpackCoord(creep.moveRequest))
 
         creep.moved = creep.moveRequest

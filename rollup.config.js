@@ -30,7 +30,7 @@ const ignoreWarningTypes = new Set([
 ])
 
 export default {
-    inlineDynamicImports: true,
+    // perf: true,
     input: 'src/main.ts',
     output: {
         file: 'dist/main.js',

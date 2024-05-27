@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { SourceMapConsumer } from 'source-map'
 import { ErrorExporter } from './errorExporter'
+import { LogOps } from 'utils/logOps'
 
 export class ErrorMapper {
   // Cache consumer
@@ -9,7 +10,12 @@ export class ErrorMapper {
   public static get consumer(): SourceMapConsumer {
     if (this._consumer == null) {
       // @ts-ignore
-      this._consumer = new SourceMapConsumer(require('main.js.map'))
+      try {
+        this._consumer = new SourceMapConsumer(require('main.js.map'))
+      }
+      catch {
+        LogOps.log("Could not find main.js.map")
+      }
     }
 
     // @ts-ignore
@@ -29,6 +35,21 @@ export class ErrorMapper {
    * @returns {string} The source-mapped stack trace
    */
   public static sourceMappedStackTrace(error: Error | string): string {
+
+    if (!this.consumer) {
+
+        if (error instanceof String) {
+            throw Error(error as string)
+        }
+
+        // Not an ideal way to handle errors, but it does illuminate the trace
+        if (error instanceof Error) {
+            throw Error(error.stack)
+        }
+
+        throw Error("[Custom error] Failed to follow stack trace")
+    }
+
     const stack: string = error instanceof Error ? (error.stack as string) : error
     if (Object.prototype.hasOwnProperty.call(this.cache, stack)) {
       return this.cache[stack]
