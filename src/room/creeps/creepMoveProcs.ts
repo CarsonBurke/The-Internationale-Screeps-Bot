@@ -12,9 +12,19 @@ import {
   packedPosLength,
 } from '../../constants/general'
 import { CustomPathFinderArgs, PathGoal, CustomPathFinder } from 'international/customPathFinder'
-import { packCoord, packPos, packPosList, unpackPos, unpackPosAt } from 'other/codec'
-import { areCoordsEqual, arePositionsEqual, findObjectWithID, forAdjacentCoords, getRange, getRangeEuc, isAlly, isExit } from 'utils/utils'
+import { packCoord, packPos, packPosList, unpackCoord, unpackPos, unpackPosAt } from 'other/codec'
+import {
+  areCoordsEqual,
+  arePositionsEqual,
+  findObjectWithID,
+  forAdjacentCoords,
+  getRange,
+  getRangeEuc,
+  isAlly,
+  isExit,
+} from 'utils/utils'
 import { MyCreepProcs } from './myCreepProcs'
+import { RoomOps } from 'room/roomOps'
 
 /**
  * Utilities involving the movement of creeps
@@ -250,15 +260,20 @@ export class CreepMoveProcs {
     if (creep instanceof Creep && creep.spawning) return
     if (!creep.moveRequest) return
 
+    if (Game.flags[FlagNames.debugMoveRequests]) {
+      creep.room.targetVisual(creep.pos, unpackCoord(creep.moveRequest), true)
+    }
+
     CreepMoveProcs.shove(creep)
   }
 
-  static shove(creep: Creep | PowerCreep, avoidPackedCoords: Set<string> = new Set()) {
+  static shove(creep: Creep | PowerCreep, avoidPackedCoords: Set<string> = new Set()): -1 | 1 {
     const { room } = creep
 
-    let targetCoord = creep.actionCoord
-    if (!targetCoord && creep.memory[CreepMemoryKeys.goalPos])
+    let targetCoord = creep.moveRequest ? unpackCoord(creep.moveRequest) : creep.actionCoord
+    if (!targetCoord && creep.memory[CreepMemoryKeys.goalPos]) {
       targetCoord = unpackPos(creep.memory[CreepMemoryKeys.goalPos])
+    }
 
     avoidPackedCoords.add(packCoord(creep.pos))
 
@@ -272,11 +287,13 @@ export class CreepMoveProcs {
     // If there is a creep make sure we aren't overlapping with other shoves
 
     if (creepAtPosName) {
-      avoidPackedCoords.add(packCoord(creep.pos))
-      avoidPackedCoords.add(packedShoveCoord)
 
       const creepAtPos = Game.creeps[creepAtPosName] || Game.powerCreeps[creepAtPosName]
-      if (!CreepMoveProcs.shove(creep, avoidPackedCoords)) return false
+
+      avoidPackedCoords.add(packCoord(creepAtPos.pos))
+      avoidPackedCoords.add(packedShoveCoord)
+
+      if (!CreepMoveProcs.shove(creepAtPos, avoidPackedCoords)) return false
     }
 
     creep.moveTarget = shoveCoord
@@ -289,6 +306,7 @@ export class CreepMoveProcs {
     targetCoord?: Coord,
   ) {
     const { room } = creep
+    const creepMemory = Memory.creeps[creep.name]
     const terrain = room.getTerrain()
 
     let shoveCoord: Coord
@@ -318,21 +336,27 @@ export class CreepMoveProcs {
 
       let score = 0
       if (targetCoord) {
-        score += getRangeEuc(coord, targetCoord) * 3
+        if (creep.actionCoord && areCoordsEqual(coord, creep.actionCoord)) score -= 100
+        else if (creepMemory[CreepMemoryKeys.goalPos] && packedCoord === creepMemory[CreepMemoryKeys.goalPos]) score -= 100
+        else if (creep.moveRequest && packedCoord === creep.moveRequest) score -= 1
+        // score += getRangeEuc(coord, targetCoord) * 3
       }
 
-      if (terrainType === TERRAIN_MASK_SWAMP) score += 1
-      if (room.creepPositions[packedCoord] || room.powerCreepPositions[packedCoord]) score += 1
+      // if (terrainType === TERRAIN_MASK_SWAMP) score += 1
+
+      // Ideally we test this, and if the creep has a net positive score in regards to successful recursed movement (more creeps moved to where they want than otherwise) then it is accepted (in parent shove function)
+      if (!isExit(coord) && (room.creepPositions[packedCoord] || room.powerCreepPositions[packedCoord])) score += 1
 
       // If the coord is reserved, increase score porportional to importance of the reservation
       const reservationType = creep.room.roomManager.reservedCoords.get(packedCoord)
       // Don't shove onto spawning-reserved coords
       if (reservationType === ReservedCoordTypes.spawning) return
       // Score based on value of reservation
-      if (reservationType !== undefined) score += reservationType * 2
+      if (reservationType !== undefined) score += 1 // reservationType
 
-      if (Game.flags[FlagNames.roomVisuals])
+      if (Game.flags[FlagNames.roomVisuals]) {
         creep.room.visual.text(score.toString(), coord.x, coord.y)
+      }
 
       // Preference for lower-scoring coords
       if (score >= lowestScore) return

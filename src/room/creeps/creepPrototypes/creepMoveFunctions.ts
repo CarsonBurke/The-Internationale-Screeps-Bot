@@ -96,6 +96,7 @@ PowerCreep.prototype.createMoveRequestByPath = Creep.prototype.createMoveRequest
   }
 
   if (isOnLastPos || this.memory[CreepMemoryKeys.usedPathForGoal]) {
+    
     this.memory[CreepMemoryKeys.usedPathForGoal] = packPos(args.goals[0].pos)
     return this.createMoveRequest(args)
   }

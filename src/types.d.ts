@@ -807,7 +807,7 @@ declare global {
 
   interface CreepProperties {
     /**
-     * The packed position of the moveRequest, if one has been made
+     * The packed coord of the moveRequest, if one has been made
      */
     moveRequest: string
 

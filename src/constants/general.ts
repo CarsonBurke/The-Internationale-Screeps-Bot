@@ -1436,6 +1436,7 @@ export enum FlagNames {
   roomVisuals = 'roomVisuals',
   deactivate = 'deactiveate',
   debugFunneling = 'debugFunneling',
+  debugMoveRequests = 'debugMoveRequests',
 }
 
 export const creepDamageEvents = new Set([

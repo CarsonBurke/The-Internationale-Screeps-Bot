@@ -79,6 +79,13 @@ Room.prototype.targetVisual = function (
     color: customColors.green,
     opacity: 0.3,
   })
+
+  this.visual.circle(coord2.x, coord2.y, {
+    opacity: 0.3,
+    fill: '',
+    stroke: customColors.green,
+    radius: 0.1,
+  })
 }
 
 Room.prototype.scoutRemote = function (scoutingRoom) {

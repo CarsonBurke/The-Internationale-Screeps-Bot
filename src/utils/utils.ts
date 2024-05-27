@@ -540,7 +540,6 @@ export function forAdjacentCoords(startCoord: Coord, f: (near: Coord) => Result.
   for (let x = startCoord.x - 1; x <= startCoord.x + 1; x += 1) {
     for (let y = startCoord.y - 1; y <= startCoord.y + 1; y += 1) {
       if (x == startCoord.x && y === startCoord.y) continue
-      if (isXYExit(x, y)) continue
 
       if (f({ x, y }) === Result.stop) return
     }
