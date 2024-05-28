@@ -438,6 +438,7 @@ export class CustomPathFinder {
         CustomPathFinder.avoidNotMyCreeps(costs, args, room)
         CustomPathFinder.avoidImpassibleStructures(costs, args, room)
         CustomPathFinder.overrideCostMatrixes(costs, args, roomName)
+        CustomPathFinder.avoidConstructedWalls(costs, args, room)
 
         // Inform the CostMatrix
 
@@ -695,6 +696,13 @@ export class CustomPathFinder {
           costs.set(x, y, costMatrix.get(x, y))
         }
       }
+    }
+  }
+
+  static avoidConstructedWalls(costs: CostMatrix, args: CustomPathFinderArgs, roomName: room) {
+    for (const constructedWall of room.roomManager.structures.constructedWall) {
+        const { pos } = constructedWall;
+        costs.set(pos.x, pos.y, 255)
     }
   }
 }
