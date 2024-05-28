@@ -668,10 +668,12 @@ export class SpawnRequestsManager {
 
         // Stop if there are no construction sites
 
-        if (!this.communeManager.room.find(FIND_MY_CONSTRUCTION_SITES).length) return false
+        if (this.communeManager.room.find(FIND_MY_CONSTRUCTION_SITES).length === 0) return false
 
         let priority: number
-        if (CommuneUtils.storingStructures(this.communeManager.room).length) {
+
+        const storingStructures = CommuneUtils.storingStructures(this.communeManager.room)
+        if (storingStructures.length > 0) {
           priority = this.activeRemotePriority + 0.1
         } else {
           priority = this.minRemotePriority - 0.5
@@ -679,12 +681,8 @@ export class SpawnRequestsManager {
 
         let partsMultiplier = 0
 
-        const actionableStoringStructure =
-          (this.communeManager.room.storage && this.communeManager.room.controller.level >= 4) ||
-          (this.communeManager.room.terminal && this.communeManager.room.controller.level >= 6)
-
         // If there is an rcl actionable storage or terminal
-        if (actionableStoringStructure) {
+        if (storingStructures.length > 0) {
           // If the storage is sufficiently full, increase parts wanted porportionately
 
           if (
@@ -713,7 +711,7 @@ export class SpawnRequestsManager {
         const maxCreeps = 15
 
         // If there is an rcl actionable storage or terminal
-        if (actionableStoringStructure) {
+        if (storingStructures.length > 0) {
           return {
             type: SpawnRequestTypes.groupDiverse,
             role,

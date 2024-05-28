@@ -261,7 +261,7 @@ export class CreepMoveProcs {
 
   static tryRunMoveRequest(creep: Creep | PowerCreep, moveTargets: MoveTargets) {
     // revisit this in the future
-    if (creep instanceof Creep && creep.spawning) return
+    /* if (creep instanceof Creep && creep.spawning) return */
 
     const moveRequest = creep.moveRequest
     if (!moveRequest) return
@@ -279,7 +279,7 @@ export class CreepMoveProcs {
 
     if (moveRequest === creep.moveTarget) return
 
-    if (creep.moveTarget) {
+    if (creep.moveTarget !== undefined) {
       delete moveTargets[creep.moveTarget]
       delete creep.moveTarget
     }
@@ -362,7 +362,6 @@ export class CreepMoveProcs {
 
       if (moveRequestCoord) {
         if (areCoordsEqual(moveRequestCoord, coord)) {
-          room.visual.text('T', coord.x, coord.y)
           potentialCost -= 1
         }
         /* if (creep.actionCoord && areCoordsEqual(coord, creep.actionCoord)) potentialCost -= 1
@@ -447,7 +446,7 @@ export class CreepMoveProcs {
         return creepInWayCost
       }
 
-      // Preference for lower-scoring coords
+      // Preference for lower-cost coords
       if (potentialCost < 0) {
         CreepMoveProcs.assignMoveTarget(creep, packedCoord, moveTargets)
       }
@@ -463,7 +462,7 @@ export class CreepMoveProcs {
       strokeWidth: 0.15,
       opacity: 0.5,
     })
-    return -Infinity
+    return Infinity
 
     /*     const packedShoveCoord = packCoord(shoveCoord)
     const creepAtPosName =
