@@ -80,11 +80,22 @@ Room.prototype.targetVisual = function (
     opacity: 0.3,
   })
 
-  this.visual.circle(coord2.x, coord2.y, {
-    opacity: 0.3,
-    fill: '',
+  const x1 = coord1.x
+  const y1 = coord1.y
+  const x2 = coord2.x
+  const y2 = coord2.y
+  const point1x = (x1 + 3 * x2) / 4 + (y1 - y2) / 8
+  const point1y = (y1 + 3 * y2) / 4 + (x2 - x1) / 8
+  const point1: [number, number] = [point1x, point1y]
+  const point2x = (x1 + 3 * x2) / 4 + (-y1 + y2) / 8
+  const point2y = (y1 + 3 * y2) / 4 + (-x2 + x1) / 8
+  const point2: [number, number] = [point2x, point2y]
+
+  this.visual.poly([[coord2.x, coord2.y], point1, point2, [coord2.x, coord2.y]], {
+    fill: customColors.green,
     stroke: customColors.green,
-    radius: 0.1,
+    opacity: 0.5,
+    strokeWidth: 0.05,
   })
 }
 
