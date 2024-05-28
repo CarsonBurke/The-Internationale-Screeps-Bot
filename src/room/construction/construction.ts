@@ -74,7 +74,9 @@ export class ConstructionManager {
       if (!creepName) continue
 
       const creep = Game.creeps[creepName]
-      CreepMoveProcs.shove(creep)
+
+      // Need an alternate solution
+      /* CreepMoveProcs.shove(creep) */
     }
   }
   private shouldPlace() {

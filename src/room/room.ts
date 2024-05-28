@@ -42,7 +42,6 @@ import {
 } from 'utils/utils'
 import { CommuneManager } from './commune/commune'
 import { CreepRoleManager } from './creeps/creepRoleManager'
-import { EndTickCreepManager } from './creeps/endTickCreepManager'
 import { PowerCreepRoleManager } from './creeps/powerCreepRoleManager'
 import { RoomVisualsManager } from './roomVisuals'
 import { StatsManager } from 'international/stats'
@@ -102,7 +101,6 @@ export class RoomManager {
 
   creepRoleManager: CreepRoleManager
   powerCreepRoleManager: PowerCreepRoleManager
-  endTickCreepManager: EndTickCreepManager
   roomVisualsManager: RoomVisualsManager
 
   constructor() {
@@ -110,7 +108,6 @@ export class RoomManager {
 
     this.creepRoleManager = new CreepRoleManager(this)
     this.powerCreepRoleManager = new PowerCreepRoleManager(this)
-    this.endTickCreepManager = new EndTickCreepManager(this)
     this.roomVisualsManager = new RoomVisualsManager(this)
   }
 

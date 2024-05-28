@@ -26,7 +26,6 @@ import { CollectiveManager } from 'international/collective'
 import { MarketManager } from 'international/market/marketOrders'
 import { GarbageCollector } from 'international/garbageCollector'
 import { EndTickManager } from 'international/endTick'
-import { EndTickCreepManager } from 'room/creeps/endTickCreepManager'
 import { PowerCreepOrganizer } from 'international/powerCreepOrganizer'
 import { LinkManager } from 'room/commune/links'
 import { CombatRequestManager } from 'room/commune/combatRequest'
@@ -162,7 +161,6 @@ export function profilerRegister() {
   profiler.registerClass(ConstructionManager, 'ConstructionManager')
   profiler.registerClass(RemotesManager, 'RemotesManager')
   profiler.registerClass(HaulRequestManager, 'HaulRequestManager')
-  profiler.registerClass(EndTickCreepManager, 'EndTickCreepManager')
   profiler.registerClass(LinkManager, 'LinkManager')
   profiler.registerClass(DefenceProcs, 'DefenceProcs')
   profiler.registerClass(DefenceUtils, 'DefenceUtils')

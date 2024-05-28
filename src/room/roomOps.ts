@@ -25,6 +25,7 @@ import { HaulerServices } from './creeps/roles/haulerServices'
 import { HaulerOps } from './creeps/roles/haulerOps'
 import { roomData } from './roomData'
 import { RoomManager } from './room'
+import { MyCreepServices } from './creeps/myCreepServices'
 
 export class RoomOps {
   /**
@@ -206,7 +207,8 @@ export class RoomOps {
 
     roomManager.creepRoleManager.run()
     roomManager.powerCreepRoleManager.run()
-    roomManager.endTickCreepManager.run()
+    MyCreepServices.moveCreeps(room)
+    MyCreepServices.chant(room)
     roomManager.roomVisualsManager.run()
 
     this.test(room)

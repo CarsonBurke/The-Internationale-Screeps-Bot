@@ -27,6 +27,7 @@ import { HaulerNeedOps } from './haulerNeedOps'
 import { CommuneManager } from './commune'
 import { RoomOps } from 'room/roomOps'
 import { WorkRequestOps } from './workRequest'
+import { MyCreepServices } from 'room/creeps/myCreepServices'
 
 /**
  * Minor processes for communes
@@ -214,7 +215,8 @@ export class CommuneOps {
     SpawningStructureOps.tryRunSpawning(room)
 
     SpawningStructureOps.tryRegisterSpawningMovement(room)
-    room.roomManager.endTickCreepManager.run()
+    MyCreepServices.moveCreeps(room)
+    MyCreepServices.chant(room)
     room.roomManager.roomVisualsManager.run()
 
     this.test(room)

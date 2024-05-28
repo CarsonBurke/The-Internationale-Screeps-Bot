@@ -811,7 +811,9 @@ declare global {
      */
     moveRequest: string
 
-    moveTarget?: Coord
+    moveTarget?: string
+
+    moveOptions?: Coord[]
 
     /**
      * Wether the creep moved a resource this tick

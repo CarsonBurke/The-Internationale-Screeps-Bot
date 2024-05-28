@@ -408,13 +408,13 @@ export class SpawningStructureOps {
         })
       }
 
-      if (CreepMoveProcs.shove(creepAtPos, new Set([packedCoord]))) {
+      /* if (CreepMoveProcs.shove(creepAtPos, new Set([packedCoord]))) {
         creep.room.errorVisual(unpackCoord(creep.moveRequest))
 
         creep.moved = creep.moveRequest
         delete room.moveRequests[creep.moved]
         delete creep.moveRequest
-      }
+      } */
 
       continue
     }

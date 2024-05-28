@@ -1,9 +1,10 @@
 import {
   findObjectWithID,
   getRange,
-  packAsNum, findLowestScore,
+  packAsNum,
+  findLowestScore,
   roundTo,
-  forCoordsAroundRange
+  forCoordsAroundRange,
 } from 'utils/utils'
 import './workRequest'
 import './combatRequest'
