@@ -14,7 +14,7 @@ import {
 import { CustomPathFinderArgs, PathGoal, CustomPathFinder } from 'international/customPathFinder'
 import { packCoord, packPos, packPosList, unpackCoord, unpackPos, unpackPosAt } from 'other/codec'
 import {
-    Utils,
+  Utils,
   areCoordsEqual,
   arePositionsEqual,
   findAdjacentCoordsToCoord,
@@ -423,7 +423,6 @@ export class CreepMoveProcs {
 
       const creepInWay = Game.creeps[creepInWayName] || Game.powerCreeps[creepInWayName]
       if (creepInWay) {
-
         if (creepInWay.moveRequest === packedCoord) {
           potentialCost += 1
         }
@@ -509,7 +508,14 @@ export class CreepMoveProcs {
 
     // Consider sorting by range to action coord, where closer is more preferred
     moveOptions.push(...findAdjacentCoordsToCoord(creep.pos))
-    Utils.shuffleArray(moveOptions)
+
+    if (creep.actionCoord) {
+      moveOptions.sort((a, b) => {
+        return getRange(a, creep.actionCoord) - getRange(b, creep.actionCoord)
+      })
+    } else {
+      Utils.shuffleArray(moveOptions)
+    }
 
     creep.moveOptions = moveOptions
     return moveOptions
