@@ -80,6 +80,7 @@ function passStringToWasm0(arg, malloc, realloc) {
         const ret = encodeString(arg, view);
 
         offset += ret.written;
+        ptr = realloc(ptr, len, offset, 1) >>> 0;
     }
 
     WASM_VECTOR_LEN = offset;
@@ -210,6 +211,40 @@ function handleError(f, args) {
     }
 }
 /**
+* Translates the `PWR_*` constants, which are types of powers used by power
+* creeps
+*/
+export const PowerType = Object.freeze({ GenerateOps:1,"1":"GenerateOps",OperateSpawn:2,"2":"OperateSpawn",OperateTower:3,"3":"OperateTower",OperateStorage:4,"4":"OperateStorage",OperateLab:5,"5":"OperateLab",OperateExtension:6,"6":"OperateExtension",OperateObserver:7,"7":"OperateObserver",OperateTerminal:8,"8":"OperateTerminal",DisruptSpawn:9,"9":"DisruptSpawn",DisruptTower:10,"10":"DisruptTower",Shield:12,"12":"Shield",RegenSource:13,"13":"RegenSource",RegenMineral:14,"14":"RegenMineral",DisruptTerminal:15,"15":"DisruptTerminal",OperatePower:16,"16":"OperatePower",Fortify:17,"17":"Fortify",OperateController:18,"18":"OperateController",OperateFactory:19,"19":"OperateFactory", });
+/**
+* Translates `COLOR_*` and `COLORS_ALL` constants.
+*/
+export const Color = Object.freeze({ Red:1,"1":"Red",Purple:2,"2":"Purple",Blue:3,"3":"Blue",Cyan:4,"4":"Cyan",Green:5,"5":"Green",Yellow:6,"6":"Yellow",Orange:7,"7":"Orange",Brown:8,"8":"Brown",Grey:9,"9":"Grey",White:10,"10":"White", });
+/**
+* Translates direction constants.
+*/
+export const Direction = Object.freeze({ Top:1,"1":"Top",TopRight:2,"2":"TopRight",Right:3,"3":"Right",BottomRight:4,"4":"BottomRight",Bottom:5,"5":"Bottom",BottomLeft:6,"6":"BottomLeft",Left:7,"7":"Left",TopLeft:8,"8":"TopLeft", });
+/**
+* Translates the `EFFECT_*` constants, which are natural effect types
+*/
+export const NaturalEffectType = Object.freeze({ Invulnerability:1001,"1001":"Invulnerability",CollapseTimer:1002,"1002":"CollapseTimer", });
+/**
+* Type used for when the game returns a direction to an exit.
+*
+* Restricted more than `Direction` in that it can't be diagonal. Used as the
+* result of [`Room::find_exit_to`].
+*
+* Can be converted to [`Find`] for immediate use of [`Room::find`]
+* and [`Direction`].
+*
+* [`Room::find`]: crate::objects::Room::find
+* [`Room::find_exit_to`]: crate::objects::Room::find_exit_to
+*/
+export const ExitDirection = Object.freeze({ Top:1,"1":"Top",Right:3,"3":"Right",Bottom:5,"5":"Bottom",Left:7,"7":"Left", });
+/**
+* Translates `TERRAIN_*` constants.
+*/
+export const Terrain = Object.freeze({ Plain:0,"0":"Plain",Wall:1,"1":"Wall",Swamp:2,"2":"Swamp", });
+/**
 * Translates `FIND_*` constants for interal API calls
 *
 * Unless you're storing the type of find constant to be used for a call, you
@@ -225,43 +260,13 @@ export const Find = Object.freeze({
 */
 ExitTop:1,"1":"ExitTop",ExitRight:3,"3":"ExitRight",ExitBottom:5,"5":"ExitBottom",ExitLeft:7,"7":"ExitLeft",Exit:10,"10":"Exit",Creeps:101,"101":"Creeps",MyCreeps:102,"102":"MyCreeps",HostileCreeps:103,"103":"HostileCreeps",SourcesActive:104,"104":"SourcesActive",Sources:105,"105":"Sources",DroppedResources:106,"106":"DroppedResources",Structures:107,"107":"Structures",MyStructures:108,"108":"MyStructures",HostileStructures:109,"109":"HostileStructures",Flags:110,"110":"Flags",ConstructionSites:111,"111":"ConstructionSites",MySpawns:112,"112":"MySpawns",HostileSpawns:113,"113":"HostileSpawns",MyConstructionSites:114,"114":"MyConstructionSites",HostileConstructionSites:115,"115":"HostileConstructionSites",Minerals:116,"116":"Minerals",Nukes:117,"117":"Nukes",Tombstones:118,"118":"Tombstones",PowerCreeps:119,"119":"PowerCreeps",MyPowerCreeps:120,"120":"MyPowerCreeps",HostilePowerCreeps:121,"121":"HostilePowerCreeps",Deposits:122,"122":"Deposits",Ruins:123,"123":"Ruins",ScoreContainers:10011,"10011":"ScoreContainers",ScoreCollectors:10012,"10012":"ScoreCollectors",SymbolContainers:10021,"10021":"SymbolContainers",SymbolDecoders:10022,"10022":"SymbolDecoders",Reactors:10051,"10051":"Reactors", });
 /**
-* Translates the `PWR_*` constants, which are types of powers used by power
-* creeps
-*/
-export const PowerType = Object.freeze({ GenerateOps:1,"1":"GenerateOps",OperateSpawn:2,"2":"OperateSpawn",OperateTower:3,"3":"OperateTower",OperateStorage:4,"4":"OperateStorage",OperateLab:5,"5":"OperateLab",OperateExtension:6,"6":"OperateExtension",OperateObserver:7,"7":"OperateObserver",OperateTerminal:8,"8":"OperateTerminal",DisruptSpawn:9,"9":"DisruptSpawn",DisruptTower:10,"10":"DisruptTower",Shield:12,"12":"Shield",RegenSource:13,"13":"RegenSource",RegenMineral:14,"14":"RegenMineral",DisruptTerminal:15,"15":"DisruptTerminal",OperatePower:16,"16":"OperatePower",Fortify:17,"17":"Fortify",OperateController:18,"18":"OperateController",OperateFactory:19,"19":"OperateFactory", });
-/**
-* Translates the `EFFECT_*` constants, which are natural effect types
-*/
-export const NaturalEffectType = Object.freeze({ Invulnerability:1001,"1001":"Invulnerability",CollapseTimer:1002,"1002":"CollapseTimer", });
-/**
-* Translates direction constants.
-*/
-export const Direction = Object.freeze({ Top:1,"1":"Top",TopRight:2,"2":"TopRight",Right:3,"3":"Right",BottomRight:4,"4":"BottomRight",Bottom:5,"5":"Bottom",BottomLeft:6,"6":"BottomLeft",Left:7,"7":"Left",TopLeft:8,"8":"TopLeft", });
-/**
-* Type used for when the game returns a direction to an exit.
-*
-* Restricted more than `Direction` in that it can't be diagonal. Used as the
-* result of [`Room::find_exit_to`].
-*
-* Can be converted to [`Find`] for immediate use of [`Room::find`]
-* and [`Direction`].
-*
-* [`Room::find`]: crate::objects::Room::find
-* [`Room::find_exit_to`]: crate::objects::Room::find_exit_to
-*/
-export const ExitDirection = Object.freeze({ Top:1,"1":"Top",Right:3,"3":"Right",Bottom:5,"5":"Bottom",Left:7,"7":"Left", });
-/**
-* Translates `COLOR_*` and `COLORS_ALL` constants.
-*/
-export const Color = Object.freeze({ Red:1,"1":"Red",Purple:2,"2":"Purple",Blue:3,"3":"Blue",Cyan:4,"4":"Cyan",Green:5,"5":"Green",Yellow:6,"6":"Yellow",Orange:7,"7":"Orange",Brown:8,"8":"Brown",Grey:9,"9":"Grey",White:10,"10":"White", });
-/**
-* Translates `TERRAIN_*` constants.
-*/
-export const Terrain = Object.freeze({ Plain:0,"0":"Plain",Wall:1,"1":"Wall",Swamp:2,"2":"Swamp", });
-/**
 * Translates the `DENSITY_*` constants.
 */
 export const Density = Object.freeze({ Low:1,"1":"Low",Moderate:2,"2":"Moderate",High:3,"3":"High",Ultra:4,"4":"Ultra", });
+
+const SearchGoalFinalization = (typeof FinalizationRegistry === 'undefined')
+    ? { register: () => {}, unregister: () => {} }
+    : new FinalizationRegistry(ptr => wasm.__wbg_searchgoal_free(ptr >>> 0));
 /**
 */
 export class SearchGoal {
@@ -269,7 +274,7 @@ export class SearchGoal {
     __destroy_into_raw() {
         const ptr = this.__wbg_ptr;
         this.__wbg_ptr = 0;
-
+        SearchGoalFinalization.unregister(this);
         return ptr;
     }
 
@@ -330,6 +335,20 @@ function __wbg_get_imports() {
     imports.wbg.__wbindgen_object_drop_ref = function(arg0) {
         takeObject(arg0);
     };
+    imports.wbg.__wbg_setstackTraceLimit_1e311e6e52596ac7 = function(arg0) {
+        Error.stackTraceLimit = arg0;
+    };
+    imports.wbg.__wbg_new_26f2ef54137daf0f = function() {
+        const ret = new Error();
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbg_stack_18f5a1687f0ed62b = function(arg0, arg1) {
+        const ret = getObject(arg1).stack;
+        const ptr1 = passStringToWasm0(ret, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const len1 = WASM_VECTOR_LEN;
+        getInt32Memory0()[arg0 / 4 + 1] = len1;
+        getInt32Memory0()[arg0 / 4 + 0] = ptr1;
+    };
     imports.wbg.__wbindgen_string_get = function(arg0, arg1) {
         const obj = getObject(arg1);
         const ret = typeof(obj) === 'string' ? obj : undefined;
@@ -337,10 +356,6 @@ function __wbg_get_imports() {
         var len1 = WASM_VECTOR_LEN;
         getInt32Memory0()[arg0 / 4 + 1] = len1;
         getInt32Memory0()[arg0 / 4 + 0] = ptr1;
-    };
-    imports.wbg.__wbg_getMe_463fab2b1ba54c2f = function() {
-        const ret = getMe();
-        return addHeapObject(ret);
     };
     imports.wbg.__wbindgen_is_function = function(arg0) {
         const ret = typeof(getObject(arg0)) === 'function';
@@ -363,36 +378,8 @@ function __wbg_get_imports() {
         const ret = getObject(arg0) in getObject(arg1);
         return ret;
     };
-    imports.wbg.__wbindgen_number_get = function(arg0, arg1) {
-        const obj = getObject(arg1);
-        const ret = typeof(obj) === 'number' ? obj : undefined;
-        getFloat64Memory0()[arg0 / 8 + 1] = isLikeNone(ret) ? 0 : ret;
-        getInt32Memory0()[arg0 / 4 + 0] = !isLikeNone(ret);
-    };
-    imports.wbg.__wbg_static_accessor_ROOM_POSITION_PROTOTYPE_ede83b805b9f3b9d = function() {
-        const ret = RoomPosition.prototype;
-        return addHeapObject(ret);
-    };
-    imports.wbg.__wbindgen_string_new = function(arg0, arg1) {
-        const ret = getStringFromWasm0(arg0, arg1);
-        return addHeapObject(ret);
-    };
-    imports.wbg.__wbg_setpacked_2a31b92dc78157c1 = function(arg0, arg1) {
-        getObject(arg0).__packedPos = arg1 >>> 0;
-    };
-    imports.wbg.__wbg_foreignsegment_4d42e4f33186c6c7 = function() {
-        const ret = RawMemory.foreignSegment;
-        return isLikeNone(ret) ? 0 : addHeapObject(ret);
-    };
-    imports.wbg.__wbg_setActiveForeignSegment_12b0a9bba1366f8c = function(arg0, arg1) {
-        RawMemory.setActiveForeignSegment(getObject(arg0), arg1 === 0xFFFFFF ? undefined : arg1);
-    };
-    imports.wbg.__wbg_username_6fb6857ac6a564c0 = function(arg0) {
-        const ret = getObject(arg0).username;
-        return addHeapObject(ret);
-    };
-    imports.wbg.__wbg_data_1eaedebc6fcb7d74 = function(arg0) {
-        const ret = getObject(arg0).data;
+    imports.wbg.__wbg_getMe_463fab2b1ba54c2f = function() {
+        const ret = getMe();
         return addHeapObject(ret);
     };
     imports.wbg.__wbindgen_jsval_loose_eq = function(arg0, arg1) {
@@ -404,6 +391,16 @@ function __wbg_get_imports() {
         const ret = typeof(v) === 'boolean' ? (v ? 1 : 0) : 2;
         return ret;
     };
+    imports.wbg.__wbindgen_number_get = function(arg0, arg1) {
+        const obj = getObject(arg1);
+        const ret = typeof(obj) === 'number' ? obj : undefined;
+        getFloat64Memory0()[arg0 / 8 + 1] = isLikeNone(ret) ? 0 : ret;
+        getInt32Memory0()[arg0 / 4 + 0] = !isLikeNone(ret);
+    };
+    imports.wbg.__wbindgen_string_new = function(arg0, arg1) {
+        const ret = getStringFromWasm0(arg0, arg1);
+        return addHeapObject(ret);
+    };
     imports.wbg.__wbindgen_object_clone_ref = function(arg0) {
         const ret = getObject(arg0);
         return addHeapObject(ret);
@@ -412,90 +409,115 @@ function __wbg_get_imports() {
         const ret = getObject(arg0)[getObject(arg1)];
         return addHeapObject(ret);
     };
-    imports.wbg.__wbg_get_44be0491f933a435 = function(arg0, arg1) {
+    imports.wbg.__wbg_log_5bb5f88f245d7762 = function(arg0) {
+        console.log(getObject(arg0));
+    };
+    imports.wbg.__wbg_foreignsegment_8bc4ae672d5b271f = function() {
+        const ret = RawMemory.foreignSegment;
+        return isLikeNone(ret) ? 0 : addHeapObject(ret);
+    };
+    imports.wbg.__wbg_setActiveForeignSegment_7873aef1b3e2295d = function(arg0, arg1) {
+        RawMemory.setActiveForeignSegment(getObject(arg0), arg1 === 0xFFFFFF ? undefined : arg1);
+    };
+    imports.wbg.__wbg_username_c25f28bdd3c776cc = function(arg0) {
+        const ret = getObject(arg0).username;
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbg_data_92b0a5e82016d97e = function(arg0) {
+        const ret = getObject(arg0).data;
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbg_setpacked_74955c5f21a1d228 = function(arg0, arg1) {
+        getObject(arg0).__packedPos = arg1 >>> 0;
+    };
+    imports.wbg.__wbg_static_accessor_ROOM_POSITION_PROTOTYPE_20e3978a4622bf19 = function() {
+        const ret = RoomPosition.prototype;
+        return addHeapObject(ret);
+    };
+    imports.wbg.__wbg_get_bd8e338fbd5f5cc8 = function(arg0, arg1) {
         const ret = getObject(arg0)[arg1 >>> 0];
         return addHeapObject(ret);
     };
-    imports.wbg.__wbg_length_fff51ee6522a1a18 = function(arg0) {
+    imports.wbg.__wbg_length_cd7af8117672b8b8 = function(arg0) {
         const ret = getObject(arg0).length;
         return ret;
     };
-    imports.wbg.__wbg_next_526fc47e980da008 = function(arg0) {
+    imports.wbg.__wbg_next_40fc327bfc8770e6 = function(arg0) {
         const ret = getObject(arg0).next;
         return addHeapObject(ret);
     };
-    imports.wbg.__wbg_next_ddb3312ca1c4e32a = function() { return handleError(function (arg0) {
+    imports.wbg.__wbg_next_196c84450b364254 = function() { return handleError(function (arg0) {
         const ret = getObject(arg0).next();
         return addHeapObject(ret);
     }, arguments) };
-    imports.wbg.__wbg_done_5c1f01fb660d73b5 = function(arg0) {
+    imports.wbg.__wbg_done_298b57d23c0fc80c = function(arg0) {
         const ret = getObject(arg0).done;
         return ret;
     };
-    imports.wbg.__wbg_value_1695675138684bd5 = function(arg0) {
+    imports.wbg.__wbg_value_d93c65011f51a456 = function(arg0) {
         const ret = getObject(arg0).value;
         return addHeapObject(ret);
     };
-    imports.wbg.__wbg_iterator_97f0c81209c6c35a = function() {
+    imports.wbg.__wbg_iterator_2cee6dadfd956dfa = function() {
         const ret = Symbol.iterator;
         return addHeapObject(ret);
     };
-    imports.wbg.__wbg_get_97b561fb56f034b5 = function() { return handleError(function (arg0, arg1) {
+    imports.wbg.__wbg_get_e3c254076557e348 = function() { return handleError(function (arg0, arg1) {
         const ret = Reflect.get(getObject(arg0), getObject(arg1));
         return addHeapObject(ret);
     }, arguments) };
-    imports.wbg.__wbg_call_cb65541d95d71282 = function() { return handleError(function (arg0, arg1) {
+    imports.wbg.__wbg_call_27c0f87801dedf93 = function() { return handleError(function (arg0, arg1) {
         const ret = getObject(arg0).call(getObject(arg1));
         return addHeapObject(ret);
     }, arguments) };
-    imports.wbg.__wbg_eval_8c72ad5eafe427f2 = function() { return handleError(function (arg0, arg1) {
+    imports.wbg.__wbg_eval_020a6ea487e91ede = function() { return handleError(function (arg0, arg1) {
         const ret = eval(getStringFromWasm0(arg0, arg1));
         return addHeapObject(ret);
     }, arguments) };
-    imports.wbg.__wbg_isArray_4c24b343cb13cfb1 = function(arg0) {
+    imports.wbg.__wbg_isArray_2ab64d95e09ea0ae = function(arg0) {
         const ret = Array.isArray(getObject(arg0));
         return ret;
     };
-    imports.wbg.__wbg_instanceof_ArrayBuffer_39ac22089b74fddb = function(arg0) {
+    imports.wbg.__wbg_instanceof_ArrayBuffer_836825be07d4c9d2 = function(arg0) {
         let result;
         try {
             result = getObject(arg0) instanceof ArrayBuffer;
-        } catch {
+        } catch (_) {
             result = false;
         }
         const ret = result;
         return ret;
     };
-    imports.wbg.__wbg_create_07910c399d218ffe = function(arg0) {
+    imports.wbg.__wbg_create_a4affbe2b1332881 = function(arg0) {
         const ret = Object.create(getObject(arg0));
         return addHeapObject(ret);
     };
-    imports.wbg.__wbg_buffer_085ec1f694018c4f = function(arg0) {
+    imports.wbg.__wbg_buffer_12d079cc21e14bdb = function(arg0) {
         const ret = getObject(arg0).buffer;
         return addHeapObject(ret);
     };
-    imports.wbg.__wbg_new_8125e318e6245eed = function(arg0) {
+    imports.wbg.__wbg_new_63b92bc8671ed464 = function(arg0) {
         const ret = new Uint8Array(getObject(arg0));
         return addHeapObject(ret);
     };
-    imports.wbg.__wbg_set_5cf90238115182c3 = function(arg0, arg1, arg2) {
+    imports.wbg.__wbg_set_a47bac70306a19a7 = function(arg0, arg1, arg2) {
         getObject(arg0).set(getObject(arg1), arg2 >>> 0);
     };
-    imports.wbg.__wbg_length_72e2208bbc0efc61 = function(arg0) {
+    imports.wbg.__wbg_length_c20a40f15020d68a = function(arg0) {
         const ret = getObject(arg0).length;
         return ret;
     };
-    imports.wbg.__wbg_instanceof_Uint8Array_d8d9cb2b8e8ac1d4 = function(arg0) {
+    imports.wbg.__wbg_instanceof_Uint8Array_2b3bbecd033d19f6 = function(arg0) {
         let result;
         try {
             result = getObject(arg0) instanceof Uint8Array;
-        } catch {
+        } catch (_) {
             result = false;
         }
         const ret = result;
         return ret;
     };
-    imports.wbg.__wbg_parse_670c19d4e984792e = function() { return handleError(function (arg0, arg1) {
+    imports.wbg.__wbg_parse_66d1801634e099ac = function() { return handleError(function (arg0, arg1) {
         const ret = JSON.parse(getStringFromWasm0(arg0, arg1));
         return addHeapObject(ret);
     }, arguments) };

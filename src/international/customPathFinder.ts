@@ -622,6 +622,7 @@ export class CustomPathFinder {
   static avoidKeeperLairs(costs: CostMatrix, args: CustomPathFinderArgs, roomMemory: RoomMemory) {
     if (!args.avoidKeeperLairs) return
     if (roomMemory[RoomMemoryKeys.type] !== RoomTypes.sourceKeeper) return
+    if (!roomMemory[RoomMemoryKeys.keeperLairCoords]) return
 
     const lairCoords = unpackCoordList(roomMemory[RoomMemoryKeys.keeperLairCoords])
     for (const lairCoord of lairCoords) {

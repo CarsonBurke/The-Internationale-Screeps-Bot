@@ -1,4 +1,5 @@
 import './settings'
+import 'fastestsmallesttextencoderdecoder-encodeinto/EncoderDecoderTogether.min.js'
 import './other/userScript/userScript'
 import './international/commands'
 import './debug/debugUtils'

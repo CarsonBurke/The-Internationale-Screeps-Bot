@@ -7,6 +7,91 @@ export function collaborator(): void;
 */
 export function log_setup(): void;
 /**
+* Translates the `PWR_*` constants, which are types of powers used by power
+* creeps
+*/
+export enum PowerType {
+  GenerateOps = 1,
+  OperateSpawn = 2,
+  OperateTower = 3,
+  OperateStorage = 4,
+  OperateLab = 5,
+  OperateExtension = 6,
+  OperateObserver = 7,
+  OperateTerminal = 8,
+  DisruptSpawn = 9,
+  DisruptTower = 10,
+  Shield = 12,
+  RegenSource = 13,
+  RegenMineral = 14,
+  DisruptTerminal = 15,
+  OperatePower = 16,
+  Fortify = 17,
+  OperateController = 18,
+  OperateFactory = 19,
+}
+/**
+* Translates `COLOR_*` and `COLORS_ALL` constants.
+*/
+export enum Color {
+  Red = 1,
+  Purple = 2,
+  Blue = 3,
+  Cyan = 4,
+  Green = 5,
+  Yellow = 6,
+  Orange = 7,
+  Brown = 8,
+  Grey = 9,
+  White = 10,
+}
+/**
+* Translates direction constants.
+*/
+export enum Direction {
+  Top = 1,
+  TopRight = 2,
+  Right = 3,
+  BottomRight = 4,
+  Bottom = 5,
+  BottomLeft = 6,
+  Left = 7,
+  TopLeft = 8,
+}
+/**
+* Translates the `EFFECT_*` constants, which are natural effect types
+*/
+export enum NaturalEffectType {
+  Invulnerability = 1001,
+  CollapseTimer = 1002,
+}
+/**
+* Type used for when the game returns a direction to an exit.
+*
+* Restricted more than `Direction` in that it can't be diagonal. Used as the
+* result of [`Room::find_exit_to`].
+*
+* Can be converted to [`Find`] for immediate use of [`Room::find`]
+* and [`Direction`].
+*
+* [`Room::find`]: crate::objects::Room::find
+* [`Room::find_exit_to`]: crate::objects::Room::find_exit_to
+*/
+export enum ExitDirection {
+  Top = 1,
+  Right = 3,
+  Bottom = 5,
+  Left = 7,
+}
+/**
+* Translates `TERRAIN_*` constants.
+*/
+export enum Terrain {
+  Plain = 0,
+  Wall = 1,
+  Swamp = 2,
+}
+/**
 * Translates `FIND_*` constants for interal API calls
 *
 * Unless you're storing the type of find constant to be used for a call, you
@@ -53,91 +138,6 @@ export enum Find {
   SymbolContainers = 10021,
   SymbolDecoders = 10022,
   Reactors = 10051,
-}
-/**
-* Translates the `PWR_*` constants, which are types of powers used by power
-* creeps
-*/
-export enum PowerType {
-  GenerateOps = 1,
-  OperateSpawn = 2,
-  OperateTower = 3,
-  OperateStorage = 4,
-  OperateLab = 5,
-  OperateExtension = 6,
-  OperateObserver = 7,
-  OperateTerminal = 8,
-  DisruptSpawn = 9,
-  DisruptTower = 10,
-  Shield = 12,
-  RegenSource = 13,
-  RegenMineral = 14,
-  DisruptTerminal = 15,
-  OperatePower = 16,
-  Fortify = 17,
-  OperateController = 18,
-  OperateFactory = 19,
-}
-/**
-* Translates the `EFFECT_*` constants, which are natural effect types
-*/
-export enum NaturalEffectType {
-  Invulnerability = 1001,
-  CollapseTimer = 1002,
-}
-/**
-* Translates direction constants.
-*/
-export enum Direction {
-  Top = 1,
-  TopRight = 2,
-  Right = 3,
-  BottomRight = 4,
-  Bottom = 5,
-  BottomLeft = 6,
-  Left = 7,
-  TopLeft = 8,
-}
-/**
-* Type used for when the game returns a direction to an exit.
-*
-* Restricted more than `Direction` in that it can't be diagonal. Used as the
-* result of [`Room::find_exit_to`].
-*
-* Can be converted to [`Find`] for immediate use of [`Room::find`]
-* and [`Direction`].
-*
-* [`Room::find`]: crate::objects::Room::find
-* [`Room::find_exit_to`]: crate::objects::Room::find_exit_to
-*/
-export enum ExitDirection {
-  Top = 1,
-  Right = 3,
-  Bottom = 5,
-  Left = 7,
-}
-/**
-* Translates `COLOR_*` and `COLORS_ALL` constants.
-*/
-export enum Color {
-  Red = 1,
-  Purple = 2,
-  Blue = 3,
-  Cyan = 4,
-  Green = 5,
-  Yellow = 6,
-  Orange = 7,
-  Brown = 8,
-  Grey = 9,
-  White = 10,
-}
-/**
-* Translates `TERRAIN_*` constants.
-*/
-export enum Terrain {
-  Plain = 0,
-  Wall = 1,
-  Swamp = 2,
 }
 /**
 * Translates the `DENSITY_*` constants.
