@@ -305,7 +305,7 @@ export class RoomNameUtils {
         const roomMemory = Memory.rooms[roomName]
         if (!roomMemory) return 10
 
-        if (opts.avoidDanger && roomMemory[RoomMemoryKeys.type] === RoomTypes.remote) {
+        if (opts.avoidDanger && roomMemory[RoomMemoryKeys.type] === RoomTypes.neutral) {
           if (roomMemory[RoomMemoryKeys.abandonRemote]) {
             return 10
           }

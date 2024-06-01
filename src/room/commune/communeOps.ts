@@ -350,11 +350,6 @@ export class CommuneOps {
    */
   static removeRemote(room: Room, remoteName: string, index: number) {
     Memory.rooms[room.name][RoomMemoryKeys.remotes].splice(index, 1)
-
-    const remoteMemory = Memory.rooms[remoteName]
-
-    remoteMemory[RoomMemoryKeys.type] = RoomTypes.neutral
-    RoomNameUtils.cleanMemory(remoteName)
   }
 
   static stopWorkRequestResponse(room: Room, deleteCombat?: boolean) {

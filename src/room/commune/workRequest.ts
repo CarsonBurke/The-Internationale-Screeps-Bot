@@ -15,24 +15,23 @@ import { CommuneOps } from './communeOps'
 const checkRoomStatusInverval = randomIntRange(200, 500)
 
 export class WorkRequestOps {
-    static tryCreateWorkRequest(room: Room) {
+  static tryCreateWorkRequest(room: Room) {
+    // create a workRequest if needed
 
-        // create a workRequest if needed
+    if (room.roomManager.structures.spawn.length) return
 
-        if (room.roomManager.structures.spawn.length) return
-
-        let request = Memory.workRequests[room.name]
-        if (request) {
-          request[WorkRequestKeys.priority] = 0
-          return
-        }
-
-        request = Memory.workRequests[room.name] = {
-          [WorkRequestKeys.priority]: 0,
-        }
+    let request = Memory.workRequests[room.name]
+    if (request) {
+      request[WorkRequestKeys.priority] = 0
+      return
     }
 
-    static manageWorkRequest(room: Room) {
+    request = Memory.workRequests[room.name] = {
+      [WorkRequestKeys.priority]: 0,
+    }
+  }
+
+  static manageWorkRequest(room: Room) {
     const roomMemory = Memory.rooms[room.name]
 
     const requestName = roomMemory[RoomMemoryKeys.workRequest]
@@ -54,9 +53,7 @@ export class WorkRequestOps {
     const type = Memory.rooms[requestName][RoomMemoryKeys.type]
     if (
       type === RoomTypes.ally ||
-      type === RoomTypes.enemy ||
-      type === RoomTypes.allyRemote ||
-      type === RoomTypes.enemyRemote
+      type === RoomTypes.enemy
     ) {
       // Delete the request so long as the new type isn't ally
 
@@ -151,5 +148,5 @@ export class WorkRequestOps {
 
             if (request[WorkRequestKeys.minDamage] > 0 || request[WorkRequestKeys.minHeal] > 0) this.abandonRemote()
         } */
-    }
+  }
 }

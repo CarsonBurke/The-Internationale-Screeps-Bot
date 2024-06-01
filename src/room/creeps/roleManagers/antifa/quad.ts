@@ -137,9 +137,7 @@ export class Quad {
         [RoomTypes.enemy]: Infinity,
         [RoomTypes.ally]: 2,
         [RoomTypes.sourceKeeper]: 5,
-        [RoomTypes.enemyRemote]: 3,
-        [RoomTypes.allyRemote]: 3,
-        [RoomTypes.neutral]: 2,
+        [RoomTypes.neutral]: 3,
       },
     })
   }
@@ -643,7 +641,7 @@ export class Quad {
   private rangedAttackEnemyStructures(attackingMemberNames: Set<string>) {
     if (
       Memory.rooms[this.leader.room.name][RoomMemoryKeys.type] === RoomTypes.commune ||
-      Memory.rooms[this.leader.room.name][RoomMemoryKeys.type] === RoomTypes.remote
+      Memory.rooms[this.leader.room.name][RoomMemoryKeys.type] === RoomTypes.neutral
     )
       return attackingMemberNames
 
@@ -838,7 +836,7 @@ export class Quad {
     if (request[CombatRequestKeys.type] === 'defend') return false
     if (
       Memory.rooms[this.leader.room.name][RoomMemoryKeys.type] === RoomTypes.commune ||
-      Memory.rooms[this.leader.room.name][RoomMemoryKeys.type] === RoomTypes.remote
+      Memory.rooms[this.leader.room.name][RoomMemoryKeys.type] === RoomTypes.neutral
     )
       return false
 
@@ -896,7 +894,7 @@ export class Quad {
     if (request[CombatRequestKeys.type] === 'defend') return false
     if (
       Memory.rooms[this.leader.room.name][RoomMemoryKeys.type] === RoomTypes.commune ||
-      Memory.rooms[this.leader.room.name][RoomMemoryKeys.type] === RoomTypes.remote
+      Memory.rooms[this.leader.room.name][RoomMemoryKeys.type] === RoomTypes.neutral
     )
       return false
 

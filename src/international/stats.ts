@@ -10,7 +10,7 @@ import { CommuneStats } from 'types/stats'
 
 export class StatsManager {
   static stats: {
-    [roomType in RoomTypes.commune | RoomTypes.remote]: {
+    [roomType in RoomTypes.commune | RoomTypes.neutral]: {
       [roomName: string]: Partial<CommuneStats>
     }
   }
@@ -56,7 +56,7 @@ export class StatsManager {
 
     // Otherwise configure the remote
 
-    this.stats[RoomTypes.remote][roomName] = {
+    this.stats[RoomTypes.neutral][roomName] = {
       [RoomStatsKeys.RemoteEnergyStored]: 0,
       [RoomStatsKeys.RemoteEnergyInputHarvest]: 0,
       [RoomStatsKeys.RemoteEnergyOutputRepairOther]: 0,
@@ -78,7 +78,7 @@ export class StatsManager {
 
     const remotes = roomMemory[RoomMemoryKeys.remotes]
     for (const remoteRoomName of remotes) {
-      const remoteRoomStats = this.stats[RoomTypes.remote][remoteRoomName]
+      const remoteRoomStats = this.stats[RoomTypes.neutral][remoteRoomName]
       if (!remoteRoomStats) continue
 
       roomStats[RoomStatsKeys.RemoteCount] += 1
@@ -194,12 +194,12 @@ export class StatsManager {
       powerCreeps: 0,
     }
 
-    this.stats = { [RoomTypes.commune]: {}, [RoomTypes.remote]: {} }
+    this.stats = { [RoomTypes.commune]: {}, [RoomTypes.neutral]: {} }
     this.internationalEndRun()
   }
 
   static tickInit() {
-    this.stats = { [RoomTypes.commune]: {}, [RoomTypes.remote]: {} }
+    this.stats = { [RoomTypes.commune]: {}, [RoomTypes.neutral]: {} }
   }
 
   static internationalEndRun() {
@@ -319,7 +319,7 @@ export class StatsManager {
       return
     }
 
-    if (this.stats[RoomTypes.remote][roomName]) {
+    if (this.stats[RoomTypes.neutral][roomName]) {
       if (remoteStatNames.has(statName)) {
         statName = ('r' + statName) as keyof RoomStats
       }
@@ -337,7 +337,7 @@ export class StatsManager {
     statName: keyof RoomStats | keyof CommuneStats,
     value: number,
   ) {
-    this.stats[RoomTypes.remote][roomName][statName] += value
+    this.stats[RoomTypes.neutral][roomName][statName] += value
   }
 }
 

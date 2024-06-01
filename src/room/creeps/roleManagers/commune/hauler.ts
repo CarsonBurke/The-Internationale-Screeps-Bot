@@ -141,7 +141,7 @@ export class Hauler extends Creep {
     if (remoteMemory[RoomMemoryKeys.disable]) return false
     if (remoteMemory[RoomMemoryKeys.abandonRemote]) return false
     if (remoteMemory[RoomMemoryKeys.enemyReserved]) return false
-    if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.remote) return false
+    if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.neutral) return false
     if (remoteMemory[RoomMemoryKeys.commune] !== this.commune.name) return false
 
     return true
@@ -160,7 +160,7 @@ export class Hauler extends Creep {
 
       if (remoteMemory[RoomMemoryKeys.disable]) continue
       if (remoteMemory[RoomMemoryKeys.abandonRemote]) continue
-      if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.remote) continue
+      if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.neutral) continue
       if (remoteMemory[RoomMemoryKeys.commune] !== this.commune.name) continue
 
       const sourceIndex = parseInt(splitRemoteInfo[1])
@@ -337,8 +337,7 @@ export class Hauler extends Creep {
             [RoomTypes.enemy]: Infinity,
             [RoomTypes.ally]: Infinity,
             [RoomTypes.sourceKeeper]: Infinity,
-            [RoomTypes.enemyRemote]: Infinity,
-            [RoomTypes.allyRemote]: Infinity,
+            [RoomTypes.neutral]: Infinity,
           },
         },
         {
@@ -391,8 +390,7 @@ export class Hauler extends Creep {
               [RoomTypes.enemy]: Infinity,
               [RoomTypes.ally]: Infinity,
               [RoomTypes.sourceKeeper]: Infinity,
-              [RoomTypes.enemyRemote]: Infinity,
-              [RoomTypes.allyRemote]: Infinity,
+              [RoomTypes.neutral]: Infinity,
             },
           },
           {
@@ -432,8 +430,7 @@ export class Hauler extends Creep {
           [RoomTypes.enemy]: Infinity,
           [RoomTypes.ally]: Infinity,
           [RoomTypes.sourceKeeper]: Infinity,
-          [RoomTypes.enemyRemote]: Infinity,
-          [RoomTypes.allyRemote]: Infinity,
+          [RoomTypes.neutral]: Infinity,
         },
         avoidDanger: true,
       },
@@ -601,8 +598,7 @@ export class Hauler extends Creep {
                 [RoomTypes.enemy]: Infinity,
                 [RoomTypes.ally]: Infinity,
                 [RoomTypes.sourceKeeper]: Infinity,
-                [RoomTypes.enemyRemote]: Infinity,
-                [RoomTypes.allyRemote]: Infinity,
+                [RoomTypes.neutral]: Infinity,
               },
             },
             {
@@ -639,8 +635,7 @@ export class Hauler extends Creep {
               [RoomTypes.enemy]: Infinity,
               [RoomTypes.ally]: Infinity,
               [RoomTypes.sourceKeeper]: Infinity,
-              [RoomTypes.enemyRemote]: Infinity,
-              [RoomTypes.allyRemote]: Infinity,
+              [RoomTypes.neutral]: Infinity,
             },
           },
           {
@@ -672,8 +667,7 @@ export class Hauler extends Creep {
             [RoomTypes.enemy]: Infinity,
             [RoomTypes.ally]: Infinity,
             [RoomTypes.sourceKeeper]: Infinity,
-            [RoomTypes.enemyRemote]: Infinity,
-            [RoomTypes.allyRemote]: Infinity,
+            [RoomTypes.neutral]: Infinity,
           },
         },
         {
@@ -687,7 +681,7 @@ export class Hauler extends Creep {
     }
 
     if (this.room.name === commune.name) {
-        this.passiveRenew()
+      this.passiveRenew()
 
       CreepOps.runRoomLogisticsRequestAdvanced(this, {
         types: new Set<RoomLogisticsRequestTypes>([RoomLogisticsRequestTypes.transfer]),
@@ -721,8 +715,7 @@ export class Hauler extends Creep {
             [RoomTypes.enemy]: Infinity,
             [RoomTypes.ally]: Infinity,
             [RoomTypes.sourceKeeper]: Infinity,
-            [RoomTypes.enemyRemote]: Infinity,
-            [RoomTypes.allyRemote]: Infinity,
+            [RoomTypes.neutral]: Infinity,
           },
         },
         {
@@ -757,8 +750,7 @@ export class Hauler extends Creep {
           [RoomTypes.enemy]: Infinity,
           [RoomTypes.ally]: Infinity,
           [RoomTypes.sourceKeeper]: Infinity,
-          [RoomTypes.enemyRemote]: Infinity,
-          [RoomTypes.allyRemote]: Infinity,
+          [RoomTypes.neutral]: Infinity,
         },
       },
       {
@@ -1015,8 +1007,7 @@ export class Hauler extends Creep {
         [RoomTypes.enemy]: Infinity,
         [RoomTypes.ally]: Infinity,
         [RoomTypes.sourceKeeper]: Infinity,
-        [RoomTypes.enemyRemote]: Infinity,
-        [RoomTypes.allyRemote]: Infinity,
+        [RoomTypes.neutral]: Infinity,
       },
     })
 

@@ -81,7 +81,7 @@ export class RemoteReserver extends Creep {
       if (remoteMemory[RoomMemoryKeys.disable]) continue
       if (remoteMemory[RoomMemoryKeys.abandonRemote]) continue
       if (remoteMemory[RoomMemoryKeys.remoteReservers] <= 0) continue
-      if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.remote) continue
+      if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.neutral) continue
       if (remoteMemory[RoomMemoryKeys.commune] !== this.commune.name) continue
 
       this.assignRemote(remoteName)
@@ -99,7 +99,7 @@ export class RemoteReserver extends Creep {
 
     if (remoteMemory[RoomMemoryKeys.disable]) return false
     if (remoteMemory[RoomMemoryKeys.abandonRemote]) return false
-    if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.remote) return false
+    if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.neutral) return false
     if (remoteMemory[RoomMemoryKeys.commune] !== this.commune.name) return false
 
     return true
@@ -250,8 +250,7 @@ export class RemoteReserver extends Creep {
         [RoomTypes.enemy]: Infinity,
         [RoomTypes.ally]: Infinity,
         [RoomTypes.sourceKeeper]: Infinity,
-        [RoomTypes.enemyRemote]: Infinity,
-        [RoomTypes.allyRemote]: Infinity,
+        [RoomTypes.neutral]: Infinity,
       },
     })
 

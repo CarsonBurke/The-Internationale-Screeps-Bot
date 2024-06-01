@@ -854,7 +854,10 @@ export class SpawnRequestsManager {
         // If there is a terminal and it is sufficient RCL, and there's a funnel target and we aren't it, then don't allow upgraders to spawn
         if (this.communeManager.room.terminal && this.communeManager.room.controller.level >= 6) {
           const funnelingRoomNames = CollectiveManager.getFunnelingRoomNames()
-          if (funnelingRoomNames.size > 0 && !funnelingRoomNames.has(this.communeManager.room.name)) {
+          if (
+            funnelingRoomNames.size > 0 &&
+            !funnelingRoomNames.has(this.communeManager.room.name)
+          ) {
             return false
           }
         }
@@ -1112,7 +1115,7 @@ export class SpawnRequestsManager {
 
       const remoteMemory = Memory.rooms[remoteName]
       if (remoteMemory[RoomMemoryKeys.disable]) continue
-      if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.remote) continue
+      if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.neutral) continue
       if (remoteMemory[RoomMemoryKeys.commune] !== this.communeManager.room.name) continue
       if (remoteMemory[RoomMemoryKeys.enemyReserved]) continue
       if (remoteMemory[RoomMemoryKeys.abandonRemote] > 0) continue
@@ -1297,7 +1300,7 @@ export class SpawnRequestsManager {
       const remoteMemory = Memory.rooms[remoteName]
 
       if (remoteMemory[RoomMemoryKeys.disable]) continue
-      if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.remote) continue
+      if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.neutral) continue
       if (remoteMemory[RoomMemoryKeys.commune] !== this.communeManager.room.name) continue
 
       // Add up econ data for this.communeManager.room this.communeManager.room

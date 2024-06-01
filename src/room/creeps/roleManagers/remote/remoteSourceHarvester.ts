@@ -96,7 +96,7 @@ export class RemoteHarvester extends Creep {
       return false
     if (remoteMemory[RoomMemoryKeys.disable]) return false
     if (remoteMemory[RoomMemoryKeys.enemyReserved]) return false
-    if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.remote) return false
+    if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.neutral) return false
     if (remoteMemory[RoomMemoryKeys.commune] !== this.commune.name) return false
 
     return true
@@ -115,7 +115,7 @@ export class RemoteHarvester extends Creep {
       return false
     if (remoteMemory[RoomMemoryKeys.disable]) return false
     if (remoteMemory[RoomMemoryKeys.enemyReserved]) return false
-    if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.remote) return false
+    if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.neutral) return false
     if (remoteMemory[RoomMemoryKeys.commune] !== this.commune.name) return false
 
     return true
@@ -154,7 +154,7 @@ export class RemoteHarvester extends Creep {
       if (remoteMemory[RoomMemoryKeys.disable]) continue
       if (remoteMemory[RoomMemoryKeys.abandonRemote] > 0) continue
       if (remoteMemory[RoomMemoryKeys.enemyReserved]) continue
-      if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.remote) continue
+      if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.neutral) continue
       if (remoteMemory[RoomMemoryKeys.commune] !== this.commune.name) continue
 
       const sourceIndex = parseInt(splitRemoteInfo[1])
@@ -291,7 +291,7 @@ export class RemoteHarvester extends Creep {
       if (this.maintainContainer(container) === Result.action) return Result.success
 
       const source = this.room.roomManager.remoteSources[sourceIndex]
-      
+
       const harvestResult = CreepOps.harvestSource(this, source)
       if (harvestResult !== Result.success) {
         this.message = harvestResult.toString()
@@ -384,7 +384,11 @@ export class RemoteHarvester extends Creep {
   buildContainer(): number {
     // Don't build new remote containers until we can reserve the room
     // if (!CommuneUtils.shouldRemoteContainers(this.room)) return Result.noAction
-    if (!this.room.controller.reservation || this.room.controller.reservation.username !== Memory.me) return Result.noAction
+    if (
+      !this.room.controller.reservation ||
+      this.room.controller.reservation.username !== Memory.me
+    )
+      return Result.noAction
 
     // Make sure we're a bit ahead source regen time
 
@@ -496,8 +500,7 @@ export class RemoteHarvester extends Creep {
         [RoomTypes.enemy]: Infinity,
         [RoomTypes.ally]: Infinity,
         [RoomTypes.sourceKeeper]: Infinity,
-        [RoomTypes.enemyRemote]: Infinity,
-        [RoomTypes.allyRemote]: Infinity,
+        [RoomTypes.neutral]: Infinity,
       },
     })
 
@@ -546,8 +549,7 @@ export class RemoteHarvester extends Creep {
             [RoomTypes.enemy]: Infinity,
             [RoomTypes.ally]: Infinity,
             [RoomTypes.sourceKeeper]: Infinity,
-            [RoomTypes.enemyRemote]: Infinity,
-            [RoomTypes.allyRemote]: Infinity,
+            [RoomTypes.neutral]: Infinity,
           },
           avoidDanger: true,
         },

@@ -62,9 +62,7 @@ export class Duo {
         [RoomTypes.enemy]: Infinity,
         [RoomTypes.ally]: Infinity,
         [RoomTypes.sourceKeeper]: Infinity,
-        [RoomTypes.enemyRemote]: 4,
-        [RoomTypes.allyRemote]: 4,
-        [RoomTypes.neutral]: 2,
+        [RoomTypes.neutral]: 4,
       },
     })
   }

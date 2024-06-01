@@ -344,7 +344,7 @@ export class CustomPathFinder {
     if (!args.weightRemoteStructurePlans.remoteResourcePathType) return false
 
     const roomMemory = Memory.rooms[roomName]
-    if (roomMemory[RoomMemoryKeys.type] !== RoomTypes.remote) return false
+    if (roomMemory[RoomMemoryKeys.type] !== RoomTypes.neutral) return false
 
     for (const packedPath of roomMemory[args.weightRemoteStructurePlans.remoteResourcePathType]) {
       const path = unpackPosList(packedPath)

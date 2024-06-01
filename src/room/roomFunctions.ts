@@ -127,14 +127,14 @@ Room.prototype.scoutEnemyReservedRemote = function () {
   // If the controller is not reserved by an ally
 
   if (!global.settings.allies.includes(controller.reservation.username)) {
-    this.memory[RoomMemoryKeys.owner] = controller.reservation.username
-    return (this.memory[RoomMemoryKeys.type] = RoomTypes.enemyRemote)
+    this.memory[RoomMemoryKeys.remoter] = controller.reservation.username
+    return (this.memory[RoomMemoryKeys.type] = RoomTypes.neutral)
   }
 
   // Otherwise if the room is reserved by an ally
 
-  this.memory[RoomMemoryKeys.owner] = controller.reservation.username
-  return (this.memory[RoomMemoryKeys.type] = RoomTypes.allyRemote)
+  this.memory[RoomMemoryKeys.remoter] = controller.reservation.username
+  return (this.memory[RoomMemoryKeys.type] = RoomTypes.neutral)
 }
 
 Room.prototype.scoutEnemyUnreservedRemote = function () {
@@ -167,20 +167,20 @@ Room.prototype.scoutEnemyUnreservedRemote = function () {
       if (global.settings.allies.includes(creep.owner.username)) {
         // Set type to allyRemote and stop
 
-        this.memory[RoomMemoryKeys.owner] = creep.owner.username
-        return (this.memory[RoomMemoryKeys.type] = RoomTypes.allyRemote)
+        this.memory[RoomMemoryKeys.remoter] = creep.owner.username
+        return (this.memory[RoomMemoryKeys.type] = RoomTypes.neutral)
       }
 
       // If the creep is not owned by an ally
 
       // Set type to enemyRemote and stop
 
-      this.memory[RoomMemoryKeys.owner] = creep.owner.username
+      this.memory[RoomMemoryKeys.remoter] = creep.owner.username
 
       /* room.createAttackCombatRequest() */
       this.createHarassCombatRequest()
 
-      return (this.memory[RoomMemoryKeys.type] = RoomTypes.enemyRemote)
+      return (this.memory[RoomMemoryKeys.type] = RoomTypes.neutral)
     }
   }
 
@@ -193,7 +193,7 @@ Room.prototype.scoutMyRemote = function (scoutingRoom) {
   // The room is a remote but its commune no longer exists, change to neutral
 
   if (
-    roomMemory[RoomMemoryKeys.type] === RoomTypes.remote &&
+    roomMemory[RoomMemoryKeys.type] === RoomTypes.neutral &&
     !CollectiveManager.communes.has(roomMemory[RoomMemoryKeys.commune])
   )
     roomMemory[RoomMemoryKeys.type] = RoomTypes.neutral
@@ -201,7 +201,7 @@ Room.prototype.scoutMyRemote = function (scoutingRoom) {
   // If the room is already a remote of the scoutingRoom
 
   if (
-    roomMemory[RoomMemoryKeys.type] === RoomTypes.remote &&
+    roomMemory[RoomMemoryKeys.type] === RoomTypes.neutral &&
     scoutingRoom.name === roomMemory[RoomMemoryKeys.commune]
   )
     return roomMemory[RoomMemoryKeys.type]
@@ -245,8 +245,8 @@ Room.prototype.scoutMyRemote = function (scoutingRoom) {
                 [RoomTypes.enemy]: Infinity,
                 [RoomTypes.ally]: Infinity,
                 [RoomTypes.keeper]: Infinity,
-                [RoomTypes.enemyRemote]: Infinity,
-                [RoomTypes.allyRemote]: Infinity,
+                [RoomTypes.neutral]: Infinity,
+                [RoomTypes.neutral]: Infinity,
             },
             plainCost: defaultPlainCost,
             weightStructurePlans: true,
@@ -279,8 +279,8 @@ Room.prototype.scoutMyRemote = function (scoutingRoom) {
             [RoomTypes.enemy]: Infinity,
             [RoomTypes.ally]: Infinity,
             [RoomTypes.keeper]: Infinity,
-            [RoomTypes.enemyRemote]: Infinity,
-            [RoomTypes.allyRemote]: Infinity,
+            [RoomTypes.neutral]: Infinity,
+            [RoomTypes.neutral]: Infinity,
         },
     }).length
 
@@ -288,7 +288,7 @@ Room.prototype.scoutMyRemote = function (scoutingRoom) {
  */
   // If already a remote, apply special considerations
 
-  if (roomMemory[RoomMemoryKeys.type] === RoomTypes.remote) {
+  if (roomMemory[RoomMemoryKeys.type] === RoomTypes.neutral) {
     // Generate new important positions
 
     let disable: boolean
@@ -418,7 +418,7 @@ Room.prototype.scoutMyRemote = function (scoutingRoom) {
 
     Memory.rooms[scoutingRoom.name][RoomMemoryKeys.remotes].push(this.name)
     roomMemory[RoomMemoryKeys.commune] = scoutingRoom.name
-    roomMemory[RoomMemoryKeys.type] = RoomTypes.remote
+    roomMemory[RoomMemoryKeys.type] = RoomTypes.neutral
 
     RoomNameUtils.cleanMemory(this.name)
 
@@ -555,7 +555,7 @@ Room.prototype.scoutMyRemote = function (scoutingRoom) {
 
   Memory.rooms[scoutingRoom.name][RoomMemoryKeys.remotes].push(this.name)
   roomMemory[RoomMemoryKeys.commune] = scoutingRoom.name
-  roomMemory[RoomMemoryKeys.type] = RoomTypes.remote
+  roomMemory[RoomMemoryKeys.type] = RoomTypes.neutral
 
   RoomNameUtils.cleanMemory(this.name)
 

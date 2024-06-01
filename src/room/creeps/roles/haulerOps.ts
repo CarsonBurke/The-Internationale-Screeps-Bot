@@ -139,7 +139,7 @@ export class HaulerOps {
     if (remoteMemory[RoomMemoryKeys.disable]) return false
     if (remoteMemory[RoomMemoryKeys.abandonRemote]) return false
     if (remoteMemory[RoomMemoryKeys.enemyReserved]) return false
-    if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.remote) return false
+    if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.neutral) return false
     if (remoteMemory[RoomMemoryKeys.commune] !== creep.commune.name) return false
 
     return true
@@ -158,7 +158,7 @@ export class HaulerOps {
 
       if (remoteMemory[RoomMemoryKeys.disable]) continue
       if (remoteMemory[RoomMemoryKeys.abandonRemote]) continue
-      if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.remote) continue
+      if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.neutral) continue
       if (remoteMemory[RoomMemoryKeys.commune] !== creep.commune.name) continue
 
       const sourceIndex = parseInt(splitRemoteInfo[1])
@@ -336,8 +336,7 @@ export class HaulerOps {
             [RoomTypes.enemy]: Infinity,
             [RoomTypes.ally]: Infinity,
             [RoomTypes.sourceKeeper]: Infinity,
-            [RoomTypes.enemyRemote]: Infinity,
-            [RoomTypes.allyRemote]: Infinity,
+            [RoomTypes.neutral]: Infinity,
           },
         },
         {
@@ -390,8 +389,7 @@ export class HaulerOps {
               [RoomTypes.enemy]: Infinity,
               [RoomTypes.ally]: Infinity,
               [RoomTypes.sourceKeeper]: Infinity,
-              [RoomTypes.enemyRemote]: Infinity,
-              [RoomTypes.allyRemote]: Infinity,
+              [RoomTypes.neutral]: Infinity,
             },
           },
           {
@@ -431,8 +429,7 @@ export class HaulerOps {
           [RoomTypes.enemy]: Infinity,
           [RoomTypes.ally]: Infinity,
           [RoomTypes.sourceKeeper]: Infinity,
-          [RoomTypes.enemyRemote]: Infinity,
-          [RoomTypes.allyRemote]: Infinity,
+          [RoomTypes.neutral]: Infinity,
         },
         avoidDanger: true,
       },
@@ -592,8 +589,7 @@ export class HaulerOps {
                 [RoomTypes.enemy]: Infinity,
                 [RoomTypes.ally]: Infinity,
                 [RoomTypes.sourceKeeper]: Infinity,
-                [RoomTypes.enemyRemote]: Infinity,
-                [RoomTypes.allyRemote]: Infinity,
+                [RoomTypes.neutral]: Infinity,
               },
             },
             {
@@ -630,8 +626,7 @@ export class HaulerOps {
               [RoomTypes.enemy]: Infinity,
               [RoomTypes.ally]: Infinity,
               [RoomTypes.sourceKeeper]: Infinity,
-              [RoomTypes.enemyRemote]: Infinity,
-              [RoomTypes.allyRemote]: Infinity,
+              [RoomTypes.neutral]: Infinity,
             },
           },
           {
@@ -663,8 +658,7 @@ export class HaulerOps {
             [RoomTypes.enemy]: Infinity,
             [RoomTypes.ally]: Infinity,
             [RoomTypes.sourceKeeper]: Infinity,
-            [RoomTypes.enemyRemote]: Infinity,
-            [RoomTypes.allyRemote]: Infinity,
+            [RoomTypes.neutral]: Infinity,
           },
         },
         {
@@ -712,8 +706,7 @@ export class HaulerOps {
             [RoomTypes.enemy]: Infinity,
             [RoomTypes.ally]: Infinity,
             [RoomTypes.sourceKeeper]: Infinity,
-            [RoomTypes.enemyRemote]: Infinity,
-            [RoomTypes.allyRemote]: Infinity,
+            [RoomTypes.neutral]: Infinity,
           },
         },
         {
@@ -748,8 +741,7 @@ export class HaulerOps {
           [RoomTypes.enemy]: Infinity,
           [RoomTypes.ally]: Infinity,
           [RoomTypes.sourceKeeper]: Infinity,
-          [RoomTypes.enemyRemote]: Infinity,
-          [RoomTypes.allyRemote]: Infinity,
+          [RoomTypes.neutral]: Infinity,
         },
       },
       {
@@ -1001,8 +993,7 @@ export class HaulerOps {
         [RoomTypes.enemy]: Infinity,
         [RoomTypes.ally]: Infinity,
         [RoomTypes.sourceKeeper]: Infinity,
-        [RoomTypes.enemyRemote]: Infinity,
-        [RoomTypes.allyRemote]: Infinity,
+        [RoomTypes.neutral]: Infinity,
       },
     })
 

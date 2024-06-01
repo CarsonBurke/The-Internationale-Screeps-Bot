@@ -90,7 +90,7 @@ export class RemotesManager {
       // If the room isn't a remote, remove it from the remotes array
 
       if (
-        remoteMemory[RoomMemoryKeys.type] !== RoomTypes.remote ||
+        remoteMemory[RoomMemoryKeys.type] !== RoomTypes.neutral ||
         remoteMemory[RoomMemoryKeys.commune] !== room.name
       ) {
         CommuneOps.removeRemote(room, remoteName, index)

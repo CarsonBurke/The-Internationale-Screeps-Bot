@@ -1172,7 +1172,10 @@ export class RoomManager {
     const controller = this.room.controller
     if (controller) {
       // We don't want to target any structures in communes or remotes
-      if (controller.my || Memory.rooms[this.room.name][RoomMemoryKeys.type] === RoomTypes.remote) {
+      if (
+        controller.my ||
+        Memory.rooms[this.room.name][RoomMemoryKeys.type] === RoomTypes.neutral
+      ) {
         return (this._combatStructureTargets = [])
       }
 
@@ -1286,7 +1289,7 @@ export class RoomManager {
 
         sourceContainers[i] = structure as StructureContainer
       }
-    } else if (roomType === RoomTypes.remote) {
+    } else if (roomType === RoomTypes.neutral) {
       const positions = this.remoteSourceHarvestPositions
       for (let i = 0; i < positions.length; i++) {
         const structure = this.room.findStructureAtCoord(
@@ -2024,15 +2027,16 @@ export class RoomManager {
   get advancedLogistics() {
     if (this._advancedLogistics !== undefined) return this._advancedLogistics
 
-    if (Memory.rooms[this.room.name][RoomMemoryKeys.type] === RoomTypes.remote) {
+    if (Memory.rooms[this.room.name][RoomMemoryKeys.type] === RoomTypes.neutral) {
       return (this._advancedLogistics = true)
     }
 
-    this._advancedLogistics = !!(
+    this._advancedLogistics = true
+    /* this._advancedLogistics = !!(
       this.fastFillerContainers.length ||
       (this.room.controller.level >= 4 && this.room.storage) ||
       (this.room.controller.level >= 6 && this.room.terminal)
-    )
+    ) */
     return this._advancedLogistics
   }
 

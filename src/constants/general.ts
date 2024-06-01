@@ -221,12 +221,9 @@ export enum CreepPowerTaskKeys {
 
 export enum RoomTypes {
   commune,
-  remote,
   ally,
-  allyRemote,
   neutral,
   enemy,
-  enemyRemote,
   sourceKeeper,
   center,
   highway,
@@ -344,6 +341,10 @@ export enum RoomMemoryKeys {
    * The names of the rooms the remote has paths through to get to the commune
    */
   pathsThrough,
+  /**
+   * Someone ostensibly or actually using the remote that isn't us
+   */
+  remoter,
 
   // Ally
 
@@ -384,7 +385,7 @@ export const roomTypeProperties: Set<keyof RoomMemory> = new Set([
   RoomMemoryKeys.dynamicScoreUpdate,
   RoomMemoryKeys.clearedEnemyStructures,
 
-  // Remote
+  // Neutral
 
   RoomMemoryKeys.commune,
   RoomMemoryKeys.remoteSourceFastFillerPaths,
@@ -396,6 +397,7 @@ export const roomTypeProperties: Set<keyof RoomMemory> = new Set([
   RoomMemoryKeys.recursedAbandonment,
   RoomMemoryKeys.pathsThrough,
   RoomMemoryKeys.disableSources,
+  RoomMemoryKeys.remoter,
 
   // Ally and Enemy
 
@@ -432,19 +434,7 @@ export const roomTypes: Record<RoomTypes, Set<keyof RoomMemory>> = {
     RoomMemoryKeys.mineral,
     RoomMemoryKeys.greatestRCL,
   ]),
-  [RoomTypes.remote]: new Set([
-    RoomMemoryKeys.commune,
-    RoomMemoryKeys.remoteSourceFastFillerPaths,
-    RoomMemoryKeys.remoteSourceHubPaths,
-    RoomMemoryKeys.remoteSourceCredit,
-    RoomMemoryKeys.remoteSourceCreditChange,
-    RoomMemoryKeys.remoteSourceCreditReservation,
-    RoomMemoryKeys.abandonRemote,
-    RoomMemoryKeys.recursedAbandonment,
-    RoomMemoryKeys.pathsThrough,
-  ]),
   [RoomTypes.ally]: new Set([RoomMemoryKeys.owner, RoomMemoryKeys.RCL]),
-  [RoomTypes.allyRemote]: new Set([RoomMemoryKeys.owner]),
   [RoomTypes.enemy]: new Set([
     RoomMemoryKeys.owner,
     RoomMemoryKeys.RCL,
@@ -455,8 +445,17 @@ export const roomTypes: Record<RoomTypes, Set<keyof RoomMemory>> = {
     RoomMemoryKeys.offensiveThreat,
     RoomMemoryKeys.defensiveStrength,
   ]),
-  [RoomTypes.enemyRemote]: new Set([RoomMemoryKeys.owner]),
-  [RoomTypes.neutral]: new Set([]),
+  [RoomTypes.neutral]: new Set([
+    RoomMemoryKeys.commune,
+    RoomMemoryKeys.remoteSourceFastFillerPaths,
+    RoomMemoryKeys.remoteSourceHubPaths,
+    RoomMemoryKeys.remoteSourceCredit,
+    RoomMemoryKeys.remoteSourceCreditChange,
+    RoomMemoryKeys.remoteSourceCreditReservation,
+    RoomMemoryKeys.abandonRemote,
+    RoomMemoryKeys.recursedAbandonment,
+    RoomMemoryKeys.pathsThrough,
+  ]),
   [RoomTypes.intersection]: new Set([]),
   [RoomTypes.sourceKeeper]: new Set([RoomMemoryKeys.owner, RoomMemoryKeys.keeperLairCoords]),
   [RoomTypes.center]: new Set([RoomMemoryKeys.owner]),
@@ -470,7 +469,7 @@ export const constantRoomTypes: Set<Partial<RoomTypes>> = new Set([
   RoomTypes.intersection,
 ])
 
-export const roomTypesUsedForStats = [RoomTypes.commune, RoomTypes.remote]
+export const roomTypesUsedForStats = [RoomTypes.commune, RoomTypes.neutral]
 
 export const creepRoles: CreepRoles[] = [
   'sourceHarvester',
@@ -1256,9 +1255,7 @@ export const towerPowers = [PWR_OPERATE_TOWER, PWR_DISRUPT_TOWER]
 export const remoteTypeWeights: Partial<{ [key: string]: number }> = {
   [RoomTypes.sourceKeeper]: Infinity,
   [RoomTypes.enemy]: Infinity,
-  [RoomTypes.enemyRemote]: Infinity,
   [RoomTypes.ally]: Infinity,
-  [RoomTypes.allyRemote]: Infinity,
 }
 
 export const maxWorkRequestDistance = 10

@@ -456,7 +456,7 @@ export class FlagManager {
     }
 
     const roomMemory = Memory.rooms[room.name]
-    if (roomMemory[RoomMemoryKeys.type] !== RoomTypes.remote) return
+    if (roomMemory[RoomMemoryKeys.type] !== RoomTypes.neutral) return
 
     const sourceIDs = roomMemory[RoomMemoryKeys.remoteSources]
     for (let sourceIndex = 0; sourceIndex < sourceIDs.length; sourceIndex++) {
@@ -817,7 +817,7 @@ export class FlagManager {
       const remoteName = splitRemoteInfo[0]
 
       const remoteMemory = Memory.rooms[remoteName]
-      if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.remote) continue
+      if (remoteMemory[RoomMemoryKeys.type] !== RoomTypes.neutral) continue
       if (remoteMemory[RoomMemoryKeys.commune] !== room.roomManager.room.name) continue
 
       const sourceIndex = parseInt(splitRemoteInfo[1]) as 0 | 1

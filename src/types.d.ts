@@ -1227,6 +1227,7 @@ declare global {
     [RoomMemoryKeys.remoteSourceCreditReservation]: number[]
     [RoomMemoryKeys.hasContainer]: boolean[]
     [RoomMemoryKeys.pathsThrough]: string[]
+    [RoomMemoryKeys.remoter]: string
 
     // Ally
 

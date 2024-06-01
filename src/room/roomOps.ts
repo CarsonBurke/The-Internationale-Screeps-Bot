@@ -196,7 +196,7 @@ export class RoomOps {
       return
     }
 
-    if (roomMemory[RoomMemoryKeys.type] === RoomTypes.remote) {
+    if (roomMemory[RoomMemoryKeys.type] === RoomTypes.neutral) {
       LogisticsProcs.createRemoteContainerLogisticsRequests(room)
       LogisticsProcs.createRemoteDroppedResourceLogisticsRequests(room)
       LogisticsProcs.createRemoteTombstoneLogisticsRequests(room)

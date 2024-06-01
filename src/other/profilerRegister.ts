@@ -100,7 +100,7 @@ import { ObserverProcs } from 'room/commune/observerProcs'
 import { PowerSpawnProcs } from 'room/commune/powerSpawnProcs'
 import { RoomOps } from 'room/roomOps'
 import { SegmentsManager } from 'international/segments'
-import { wasm } from './wasmInit'
+// import { wasm } from './wasmInit'
 import { initSync } from '../wasm/pkg/commiebot_wasm.js'
 import { InitManager } from 'international/init'
 import { TickInit } from 'international/tickInit'
@@ -223,7 +223,6 @@ export function profilerRegister() {
   // Functions
 
   profiler.registerFN(originalLoop, 'loop')
-  profiler.registerFN(wasm.collaborator, 'wasm.collaborator')
   profiler.registerFN(initSync, 'wasm.initSync')
 
   // codec functions

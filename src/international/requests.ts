@@ -31,7 +31,6 @@ export class RequestsManager extends StaticSleepable {
     this.updateHaulRequests()
 
     if (Utils.isTickInterval(runRequestInverval)) {
-
       this.runWorkRequests()
       this.runCombatRequests()
       this.runHaulRequests()
@@ -152,9 +151,7 @@ export class RequestsManager extends StaticSleepable {
       // if someone else has acquired the room
       if (
         roomMemory[RoomMemoryKeys.type] === RoomTypes.ally ||
-        roomMemory[RoomMemoryKeys.type] === RoomTypes.enemy ||
-        roomMemory[RoomMemoryKeys.type] === RoomTypes.allyRemote ||
-        roomMemory[RoomMemoryKeys.type] === RoomTypes.enemyRemote
+        roomMemory[RoomMemoryKeys.type] === RoomTypes.enemy
       ) {
         // Wait on the request
         Memory.workRequests[roomName][WorkRequestKeys.abandon] = 20000
@@ -275,15 +272,11 @@ export class RequestsManager extends StaticSleepable {
           request[CombatRequestKeys.minMeleeHeal] +
             (request[CombatRequestKeys.maxTowerDamage] || 0),
         )
-        const minRangedHealCost = Utils.findMinHealCost(
-          request[CombatRequestKeys.minRangedHeal],
-        )
+        const minRangedHealCost = Utils.findMinHealCost(request[CombatRequestKeys.minRangedHeal])
 
         if (minRangedAttackCost + minRangedHealCost > room.energyCapacityAvailable) continue
 
-        const minAttackCost = Utils.findMinMeleeAttackCost(
-          request[CombatRequestKeys.minDamage],
-        )
+        const minAttackCost = Utils.findMinMeleeAttackCost(request[CombatRequestKeys.minDamage])
         if (minAttackCost > room.energyCapacityAvailable) continue
 
         communes.push(roomName)

@@ -50,10 +50,8 @@ export class AllyVanguard extends Creep {
       if (
         !roomMemory ||
         roomMemory[RoomMemoryKeys.type] === RoomTypes.enemy ||
-        roomMemory[RoomMemoryKeys.type] === RoomTypes.enemyRemote ||
         roomMemory[RoomMemoryKeys.type] === RoomTypes.sourceKeeper ||
-        roomMemory[RoomMemoryKeys.type] === RoomTypes.ally ||
-        roomMemory[RoomMemoryKeys.type] === RoomTypes.allyRemote
+        roomMemory[RoomMemoryKeys.type] === RoomTypes.ally
       )
         continue
 
