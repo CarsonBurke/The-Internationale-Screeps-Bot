@@ -48,6 +48,76 @@ export class FlagManager {
     flag.setColor(COLOR_GREEN)
     room.roomManager.roomVisualsManager.internationalDataVisuals()
   }
+  private roleNames(flagName: string, flagNameParts: string[]) {
+    const flag = Game.flags[flagName]
+    const roomName = flagNameParts[1] || flag.pos.roomName
+    const room = Game.rooms[roomName]
+    if (!room) {
+      flag.setColor(COLOR_RED)
+      return
+    }
+
+    flag.setColor(COLOR_GREEN)
+
+    // Sorry for hardcode but CreepRoles is a type! :p
+    const ROLES = [
+      'sourceHarvester',
+      'hauler',
+      'requestHauler',
+      'controllerUpgrader',
+      'builder',
+      'maintainer',
+      'mineralHarvester',
+      'hubHauler',
+      'fastFiller',
+      'meleeDefender',
+      'rangedDefender',
+      'remoteSourceHarvester',
+      'remoteReserver',
+      'remoteDefender',
+      'remoteCoreAttacker',
+      'remoteDismantler',
+      'remoteBuilder',
+      'scout',
+      'claimer',
+      'vanguard',
+      'allyVanguard',
+      'antifaRangedAttacker',
+      'antifaAttacker',
+      'antifaHealer',
+      'antifaDismantler',
+      'antifaDowngrader',
+    ]
+
+    const height = 3 + ROLES.length
+    const data = ROLES.map(role => [role, ROLES.indexOf(role)])
+    const headers = ['Role', 'index']
+    
+    Dashboard({
+      config: {
+        room: room.roomManager.room.name,
+      },
+      widgets: [
+        {
+          pos: {
+            x: 1,
+            y: 1,
+          },
+          width: 20,
+          height,
+          widget: Rectangle({
+            data: Table(() => ({
+              data,
+              config: {
+                label: 'Creep Roles',
+                headers,
+              },
+            })),
+          }),
+        },
+      ],
+    })
+  }
 
   private incomingTransactions(flagName: string, flagNameParts: string[]) {
     const flag = Game.flags[flagName]
