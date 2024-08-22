@@ -11,11 +11,11 @@
 
 ## About
 
-The International is my bot for [Screeps](https://screeps.com/), thematically based after [communist](https://en.wikipedia.org/wiki/Communism) aesthetics. Owned rooms are called communes, offensive and defensive forces are called the Red Army, economic workers are known as the Proletariat, and the Revolutionaries establish new communes and rebuild destroyed ones.
+The International is my bot for [Screeps](https://screeps.com/).
 
-This bot can provide experienced and new players a reference for when they get stuck, need inspiration, or want to laugh at some terrible code. Comments are used commonly, and code is structured so it can be easily understood, replicated, and expanded upon. Please follow similar guidelines if you make a pull request 🙂.
+This bot can provide experienced and new players a reference for when they get stuck and need inspiration. Comments are used commonly, and code is structured so it can be easily understood, replicated, and expanded upon. That being said, there is much to improve.
 
-Feel welcome to fork it and otherwise use it, however do not be overly aggressive on the Screeps world, especially to newer players. The bot is intended to be automated, but can perform manual actions via the console. It has an information panel showing progress, events, economy, military, and more.
+Feel welcome to fork it and otherwise use it, however do not be overly aggressive on the Screeps world, especially to newer players. The bot is intended to be automated, but can perform manual actions via the console. it has a powerful economy, some (rather dysfunctional) combat code including quads and duos, has very good defensive capabilities, can automatically expand, can communicate with specified players that use the same protocol, as well as receive commands from my bot, and much more.
 
 If you have specific questions or want to discuss the bot, please join our discord server.
 
